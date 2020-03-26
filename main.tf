@@ -1,4 +1,9 @@
 
+# Stable Helm Chart repository
+data "helm_repository" "stable" {
+  name = "stable"
+  url  = "https://kubernetes-charts.storage.googleapis.com"
+}
 
 data "helm_repository" "cloud_platform" {
   name = "cloud-platform"
@@ -61,9 +66,10 @@ resource "helm_release" "fluentd_es" {
 ###############
 
 resource "helm_release" "eventrouter" {
-  name      = "eventrouter"
-  chart     = "stable/eventrouter"
-  namespace = kubernetes_namespace.logging.id
+  name       = "eventrouter"
+  repository = data.helm_repository.stable.metadata[0].name
+  chart      = "eventrouter"
+  namespace  = kubernetes_namespace.logging.id
 
   set {
     name  = "sink"
