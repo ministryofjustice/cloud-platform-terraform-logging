@@ -42,7 +42,7 @@ resource "helm_release" "fluentd_es" {
   repository = data.helm_repository.cloud_platform.metadata[0].name
   chart      = "fluentd-es"
   namespace  = kubernetes_namespace.logging.id
-  version    = "2.8.0"
+  version    = "2.9.0"
 
   values = [templatefile("${path.module}/templates/fluentd-es.yaml.tpl", {
     elasticsearch_host       = var.elasticsearch_host
