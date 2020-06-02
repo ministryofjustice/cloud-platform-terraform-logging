@@ -52,7 +52,6 @@ resource "helm_release" "fluentd_es" {
 
   depends_on = [
     var.dependence_priority_classes,
-    var.dependence_deploy,
     var.dependence_prometheus
   ]
 

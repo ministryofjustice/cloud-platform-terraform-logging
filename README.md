@@ -24,7 +24,6 @@ module "logging" {
 | elasticsearch_host           | The ES host where logs are going to be sent        | string   | false | yes |
 | elasticsearch_audit_host     | The ES audit host where logs are going to be sent  | string   | false | no |
 | dependence_prometheus        | Prometheus Dependence variable                     | string   |       | yes |
-| dependence_deploy            | Deploy (helm) dependence variable                  | string   |       | yes |
 | dependence_priority_classes  | Priority class dependence                          | string   |       | yes |
 
 ## Outputs
