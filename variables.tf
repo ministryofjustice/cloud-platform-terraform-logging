@@ -1,8 +1,3 @@
-
-variable "dependence_deploy" {
-  description = "Deploy Module dependences - it is required in order to use this module."
-}
-
 variable "dependence_prometheus" {
   description = "Prometheus module dependence - it is required in order to use this module."
 }
