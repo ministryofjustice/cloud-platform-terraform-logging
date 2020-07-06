@@ -13,3 +13,9 @@ variable "elasticsearch_host" {
 variable "elasticsearch_audit_host" {
   description = "The elasticsearch audit host where logs are going to be shipped"
 }
+
+variable "enable_fluent_bit" {
+  description = "Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use"
+  default     = false
+  type        = bool
+}
