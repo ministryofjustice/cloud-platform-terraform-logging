@@ -13,3 +13,9 @@ variable "elasticsearch_host" {
 variable "elasticsearch_audit_host" {
   description = "The elasticsearch audit host where logs are going to be shipped"
 }
+
+variable "enable_curator_cronjob" {
+  description = "Enable or not elastic-search curator cronjob - which runs every day to delete indices older than 30 days"
+  default     = false
+  type        = bool
+}

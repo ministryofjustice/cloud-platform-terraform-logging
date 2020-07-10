@@ -1,4 +1,25 @@
 
+locals {
+  delete_indices = <<-EOF
+              pip3 install elasticsearch-curator &&
+              (curator_cli \
+                --host ${var.elasticsearch_host} \
+                --use_ssl \
+                --port 443 \
+                delete_indices \
+                --filter_list '[
+                  {
+                    "filtertype":"age",
+                    "source":"name",
+                    "direction":"older",
+                    "timestring": "%Y.%m.%d",
+                    "unit":"days",
+                    "unit_count":30
+                  }
+                ]')
+  EOF
+}
+
 # Stable Helm Chart repository
 data "helm_repository" "stable" {
   name = "stable"
@@ -78,3 +99,36 @@ resource "helm_release" "eventrouter" {
   depends_on = [helm_release.fluentd_es]
 }
 
+#################################
+# elasticsearch curator cronjob #
+#################################
+
+resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
+  count = var.enable_curator_cronjob ? 1 : 0
+  metadata {
+    name      = "elasticsearch-curator-cronjob"
+    namespace = "logging"
+  }
+  spec {
+    failed_jobs_history_limit     = 3
+    schedule                      = "0 1 * * *"
+    successful_jobs_history_limit = 3
+    job_template {
+      metadata {}
+      spec {
+        backoff_limit = 2
+        template {
+          metadata {}
+          spec {
+            container {
+              name    = "curator"
+              image   = "python:alpine"
+              command = ["/bin/sh", "-c", local.delete_indices]
+            }
+            restart_policy = "OnFailure"
+          }
+        }
+      }
+    }
+  }
+}
