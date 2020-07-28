@@ -32,33 +32,3 @@ module "logging" {
 ## Outputs
 
 None
-
-## Notes
-
-Currently in `fluent-bit.config` when the `Log_Level` is set to `debug` a high number of fluent-d / fluent-bit logs are injested, which can significantly increase the ES storage and cause performance problems. To avoid this the following two options can be done. 
-
-(1) Change the `Log_Level` to `info` as below:
-
-`Log_Level     info`
-
-(2) This has not be been tried and tested but filtering out fluent-d / fluent-bit logs could also be an option by adding the following to the 'input-kubernetes.config' file:
-
-`Exclude_path     *fluent-bit-daemon*,*fluentd*`
-
-Parsers can also be added to Pod annoations to suggest the logs should be parsed using a pre-defined parser. More details on this can be found here:
-https://docs.fluentbit.io/manual/pipeline/filters/kubernetes
-
-
-Pending Actions: 
-
-Currently it has not been possible to parse the ingress logs as individual fields for fluent-bit in the same way its done for fluent-d. In an attempt the following has been tried without success:
-
-(1) Add the parser annotation to the ingress controller pod 
-
-`annotations:
-    deployment.kubernetes.io/revision: "2"
-    fluentbit.io/parser: k8s-nginx-ingress`
-
-(2) Apply custom regex of the ingress parser, as per this guide here:
-
- https://stackoverflow.com/questions/53116402/fluentbit-kubernetes-how-to-extract-fields-from-existing-logs

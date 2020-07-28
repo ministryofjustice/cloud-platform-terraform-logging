@@ -99,6 +99,40 @@ resource "helm_release" "eventrouter" {
   depends_on = [helm_release.fluentd_es]
 }
 
+#################################
+# elasticsearch curator cronjob #
+#################################
+
+resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
+  count = var.enable_curator_cronjob ? 1 : 0
+  metadata {
+    name      = "elasticsearch-curator-cronjob"
+    namespace = "logging"
+  }
+  spec {
+    failed_jobs_history_limit     = 3
+    schedule                      = "0 1 * * *"
+    successful_jobs_history_limit = 3
+    job_template {
+      metadata {}
+      spec {
+        backoff_limit = 2
+        template {
+          metadata {}
+          spec {
+            container {
+              name    = "curator"
+              image   = "python:alpine"
+              command = ["/bin/sh", "-c", local.delete_indices]
+            }
+            restart_policy = "OnFailure"
+          }
+        }
+      }
+    }
+  }
+}
+
 ###############
 # fluent-bit #
 ###############
@@ -110,7 +144,7 @@ resource "helm_release" "fluent_bit" {
   chart      = "fluent-bit"
   repository = data.helm_repository.stable.metadata[0].name
   namespace  = kubernetes_namespace.logging.id
-  version    = "2.8.17"
+  version    = "2.10.0"
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {})]
 
@@ -136,10 +170,10 @@ resource "kubernetes_config_map" "fluent_bit_config" {
   }
 
   data = {
-    "fluent-bit.conf"           = file("${path.module}/resources/fluent-bit.config"),
-    "input-kubernetes.conf"     = file("${path.module}/resources/input-kubernetes.config"),
-    "filter-kubernetes.conf"    = file("${path.module}/resources/filter-kubernetes.config"),
-    "parsers.conf"              = file("${path.module}/resources/parsers.config"),
+    "fluent-bit.conf"        = file("${path.module}/resources/fluent-bit.config"),
+    "input-kubernetes.conf"  = file("${path.module}/resources/input-kubernetes.config"),
+    "filter-kubernetes.conf" = file("${path.module}/resources/filter-kubernetes.config"),
+    "parsers.conf"           = file("${path.module}/resources/parsers.config"),
     "output-elasticsearch.conf" = templatefile("${path.module}/resources/output-elasticsearch.config", {
       elasticsearch_host = var.elasticsearch_host
     })
