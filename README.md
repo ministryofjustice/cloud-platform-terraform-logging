@@ -8,11 +8,12 @@ Terraform module that deploys cloud-platform logging solution. It includes compo
 module "logging" {
   source = "github.com/ministryofjustice/cloud-platform-terraform-logging?ref=0.0.1"
 
-  elasticsearch_host       = replace(terraform.workspace, "live", "") != terraform.workspace ? "search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com" : "placeholder-elasticsearch"
-  elasticsearch_audit_host = replace(terraform.workspace, "live", "") != terraform.workspace ? "search-cloud-platform-audit-dq5bdnjokj4yt7qozshmifug6e.eu-west-2.es.amazonaws.com" : ""
+  elasticsearch_host       = replace(terraform.workspace, "live", "") != terraform.workspace ? "cloud-platform-live-es-endpoint" : "placeholder-elasticsearch"
+  elasticsearch_audit_host = replace(terraform.workspace, "live", "") != terraform.workspace ? "cloud-platform-audit-es-endpoint" : ""
 
   dependence_prometheus       = module.prometheus.helm_prometheus_operator_status
   dependence_priority_classes = kubernetes_priority_class.node_critical
+  enable_curator_cronjob      = terraform.workspace == local.live_workspace ? true : false
   enable_fluent_bit           = true
 }
 ```
@@ -26,9 +27,7 @@ module "logging" {
 | dependence_prometheus        | Prometheus Dependence variable                     | string   |       | yes |
 | dependence_priority_classes  | Priority class dependence                          | string   |       | yes |
 | enable_fluent_bit            | Enable or not fluent-bit Helm Ch                   | string   | false | yes |
-
-
-
+| enable_curator_cronjob       | Enable elastic-search curator cronjob              | boolean  | false | yes |
 
 ## Outputs
 
