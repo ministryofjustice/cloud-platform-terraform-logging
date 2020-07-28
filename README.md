@@ -27,6 +27,29 @@ module "logging" {
 | dependence_priority_classes  | Priority class dependence                          | string   |       | yes |
 | enable_fluent_bit            | Enable or not fluent-bit Helm Ch                   | string   | false | yes |
 
+
+
+
 ## Outputs
 
 None
+
+## Notes
+
+Currently in 'fluent-bit.config' when the 'Log_Level' is set to 'debug' the fluent-d / fluent-bit logs are injested. When set to debug a high number of fluentd / fluent-bit logs are injested, which can significantly increase the ES storage and cause performance problems. To avoid this the following two options can be done. 
+
+(1) Change the 'Log_Level' to info as below:
+
+Log_Level     info
+
+(2) This has not be been tried and tested but filtering out fluent-d / fluent-bit logs could also be an option by adding the follownng to the 'input-kubernetes.config' file:
+
+Exclude_path     *fluent-bit-daemon*,*fluentd*
+
+Parsers can also be added to Pod annoations to suggest the logs should be parsed using a pre-defined parser. More details on this can be found here:
+https://docs.fluentbit.io/manual/pipeline/filters/kubernetes
+
+
+Pending Actions: 
+
+Currently it has not been possible to parse the ingress logs as individual fields for fluent-bit in the same way its done for fluent-d. 
