@@ -36,7 +36,7 @@ None
 
 ## Notes
 
-Currently in 'fluent-bit.config' when the 'Log_Level' is set to 'debug' the fluent-d / fluent-bit logs are injested. When set to debug a high number of fluentd / fluent-bit logs are injested, which can significantly increase the ES storage and cause performance problems. To avoid this the following two options can be done. 
+Currently in `fluent-bit.config` when the `Log_Level` is set to `debug` a high number of fluent-d / fluent-bit logs are injested, which can significantly increase the ES storage and cause performance problems. To avoid this the following two options can be done. 
 
 (1) Change the `Log_Level` to `info` as below:
 
