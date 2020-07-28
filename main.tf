@@ -126,6 +126,7 @@ resource "helm_release" "fluent_bit" {
 
 resource "kubernetes_config_map" "fluent_bit_config" {
   count = var.enable_fluent_bit ? 1 : 0
+
   metadata {
     name      = "fluent-bit-config"
     namespace = kubernetes_namespace.logging.id
@@ -133,15 +134,17 @@ resource "kubernetes_config_map" "fluent_bit_config" {
       "k8s-app" = "fluent-bit"
     }
   }
+
   data = {
-    "fluent-bit.conf"        = file("${path.module}/resources/fluent-bit.config"),
-    "input-kubernetes.conf"  = file("${path.module}/resources/input-kubernetes.config"),
-    "filter-kubernetes.conf" = file("${path.module}/resources/filter-kubernetes.config"),
-    "parsers.conf"           = file("${path.module}/resources/output-elasticsearch.config"),
+    "fluent-bit.conf"           = file("${path.module}/resources/fluent-bit.config"),
+    "input-kubernetes.conf"     = file("${path.module}/resources/input-kubernetes.config"),
+    "filter-kubernetes.conf"    = file("${path.module}/resources/filter-kubernetes.config"),
+    "parsers.conf"              = file("${path.module}/resources/parsers.config"),
     "output-elasticsearch.conf" = templatefile("${path.module}/resources/output-elasticsearch.config", {
       elasticsearch_host = var.elasticsearch_host
     })
   }
+
   lifecycle {
     ignore_changes = [metadata.0.annotations]
   }

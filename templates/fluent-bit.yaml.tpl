@@ -1,4 +1,8 @@
 
+image:
+  fluent_bit:
+    tag: 1.3.7-debug
+
 metrics:
   enabled: true
   serviceMonitor:
