@@ -82,7 +82,7 @@ resource "helm_release" "eventrouter" {
 # fluent-bit #
 ###############
 
-resource "helm_release" "fluent-bit" {
+resource "helm_release" "fluent_bit" {
   count = var.enable_fluent_bit ? 1 : 0
 
   name       = "fluent-bit"
@@ -91,9 +91,7 @@ resource "helm_release" "fluent-bit" {
   namespace  = kubernetes_namespace.logging.id
   version    = "2.8.17"
 
-  values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
-    fluent-bit_version = "1.3.7"
-  })]
+  values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {})]
 
   depends_on = [
     kubernetes_namespace.logging,
