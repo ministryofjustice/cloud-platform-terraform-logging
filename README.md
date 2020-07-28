@@ -52,4 +52,14 @@ https://docs.fluentbit.io/manual/pipeline/filters/kubernetes
 
 Pending Actions: 
 
-Currently it has not been possible to parse the ingress logs as individual fields for fluent-bit in the same way its done for fluent-d. 
+Currently it has not been possible to parse the ingress logs as individual fields for fluent-bit in the same way its done for fluent-d. In an attempt the following has been tried without success:
+
+(1) Add the parser annotation to the ingress controller pod 
+
+`annotations:
+    deployment.kubernetes.io/revision: "2"
+    fluentbit.io/parser: k8s-nginx-ingress`
+
+(2) Apply custom regex of the ingress parser, as per this guide here:
+
+ https://stackoverflow.com/questions/53116402/fluentbit-kubernetes-how-to-extract-fields-from-existing-logs
