@@ -132,3 +132,54 @@ resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
     }
   }
 }
+
+###############
+# fluent-bit #
+###############
+
+resource "helm_release" "fluent_bit" {
+  count = var.enable_fluent_bit ? 1 : 0
+
+  name       = "fluent-bit"
+  chart      = "fluent-bit"
+  repository = data.helm_repository.stable.metadata[0].name
+  namespace  = kubernetes_namespace.logging.id
+  version    = "2.10.0"
+
+  values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {})]
+
+  depends_on = [
+    kubernetes_namespace.logging,
+    kubernetes_config_map.fluent_bit_config
+  ]
+}
+
+#########################
+# fluent-bit config #
+#########################
+
+resource "kubernetes_config_map" "fluent_bit_config" {
+  count = var.enable_fluent_bit ? 1 : 0
+
+  metadata {
+    name      = "fluent-bit-config"
+    namespace = kubernetes_namespace.logging.id
+    labels = {
+      "k8s-app" = "fluent-bit"
+    }
+  }
+
+  data = {
+    "fluent-bit.conf"        = file("${path.module}/resources/fluent-bit.config"),
+    "input-kubernetes.conf"  = file("${path.module}/resources/input-kubernetes.config"),
+    "filter-kubernetes.conf" = file("${path.module}/resources/filter-kubernetes.config"),
+    "parsers.conf"           = file("${path.module}/resources/parsers.config"),
+    "output-elasticsearch.conf" = templatefile("${path.module}/resources/output-elasticsearch.config", {
+      elasticsearch_host = var.elasticsearch_host
+    })
+  }
+
+  lifecycle {
+    ignore_changes = [metadata.0.annotations]
+  }
+}
