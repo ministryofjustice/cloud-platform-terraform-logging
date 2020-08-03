@@ -10,7 +10,7 @@ locals {
                 --filter_list '[
                   {
                     "filtertype":"age",
-                    "source":"name",
+                    "source":"creation_date",
                     "direction":"older",
                     "unit":"days",
                     "unit_count":30
