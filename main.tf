@@ -151,6 +151,7 @@ resource "helm_release" "fluent_bit" {
   depends_on = [
     kubernetes_namespace.logging,
     kubernetes_config_map.fluent_bit_config
+    var.dependence_prometheus
   ]
 }
 
