@@ -25,3 +25,9 @@ variable "enable_curator_cronjob" {
   default     = false
   type        = bool
 }
+
+variable "enable_elastalert" {
+  description = "Enable or alerting of logs to slack"
+  default     = false
+  type        = bool
+}

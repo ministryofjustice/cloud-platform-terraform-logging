@@ -31,6 +31,13 @@ data "helm_repository" "cloud_platform" {
   url  = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
 }
 
+# elastic.co
+data "helm_repository" "elastic" {
+  name = "elastic"
+  url  = "https://helm.elastic.co"
+}
+
+
 ###################
 # K8S - Namespace #
 ###################
@@ -131,6 +138,23 @@ resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
       }
     }
   }
+}
+
+###############
+# elastalert #
+###############
+
+resource "helm_release" "elastalert" {
+  count = var.enable_elastalert ? 1 : 0
+
+  name       = "elastalert"
+  chart      = "elastalert"
+  repository = data.helm_repository.stable.metadata[0].name
+  namespace  = kubernetes_namespace.logging.id
+  version    = "1.2.3"
+
+  values = [templatefile("${path.module}/templates/elastalert.yaml.tpl", {})]
+
 }
 
 ###############
