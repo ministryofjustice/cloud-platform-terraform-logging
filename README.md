@@ -20,8 +20,7 @@ module "logging" {
 
 ## Alerting Logs to Slack
 
-It is possible to send selective logs to a designated slack channel. To enable the following additional variables will need to be applied 
-to the module: 
+It is possible to send selective logs from ES to a designated slack channel. To make us of this, the following additional variables will need to be applied to the module: 
 
 ```
   enable_elastalert        = true
@@ -29,6 +28,16 @@ to the module:
   elasticsearch_audit_host = "<ES_HOST>"
   elasticsearch_port       = <ES_PORT>
   elastalert_slack_webhook_url  = "<ELASTALERT_SLACKWEBHOOK_URL>"
+```
+
+You can then add multiple rules for the logs in the ```templates/elastalert.yaml.tpl``` file as follows:
+
+```
+      filter:
+      - query:
+          query_string:
+            query: "kubernetes.pod_name: <POD_NAME>"  
+            analyze_wildcard: true
 ```
 
 ## Inputs
