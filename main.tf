@@ -153,7 +153,11 @@ resource "helm_release" "elastalert" {
   namespace  = kubernetes_namespace.logging.id
   version    = "1.2.3"
 
-  values = [templatefile("${path.module}/templates/elastalert.yaml.tpl", {})]
+  values = [templatefile("${path.module}/templates/elastalert.yaml.tpl", {
+    elasticsearch_host       = var.elasticsearch_host
+    elasticsearch_port      = var.elasticsearch_port
+    elastalert_slack_webhook_url = var.elastalert_slack_webhook_url
+  })]
 
 }
 

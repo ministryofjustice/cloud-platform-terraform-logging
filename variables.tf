@@ -10,6 +10,11 @@ variable "elasticsearch_host" {
   description = "The elasticsearch host where logs are going to be shipped"
 }
 
+variable "elasticsearch_port" {
+  description = "The elasticsearch port where logs are going to be shipped"
+}
+
+
 variable "elasticsearch_audit_host" {
   description = "The elasticsearch audit host where logs are going to be shipped"
 }
@@ -30,4 +35,8 @@ variable "enable_elastalert" {
   description = "Enable or alerting of logs to slack"
   default     = false
   type        = bool
+}
+
+variable "elastalert_slack_webhook_url" {
+  description = "Slack webhook url used by elastalert"
 }

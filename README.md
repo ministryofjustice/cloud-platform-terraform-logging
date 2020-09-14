@@ -18,6 +18,19 @@ module "logging" {
 }
 ```
 
+## Alerting Logs to Slack
+
+It is possible to send selective logs to a designated slack channel. To enable the following additional variables will need to be applied 
+to the module: 
+
+```
+  enable_elastalert        = true
+  elasticsearch_host       = "<ES_HOST>"
+  elasticsearch_audit_host = "<ES_HOST>"
+  elasticsearch_port       = <ES_PORT>
+  elastalert_slack_webhook_url  = "<ELASTALERT_SLACKWEBHOOK_URL>"
+```
+
 ## Inputs
 
 | Name                         | Description                                        | Type | Default | Required |
