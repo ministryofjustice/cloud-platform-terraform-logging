@@ -12,6 +12,7 @@ variable "elasticsearch_host" {
 
 variable "elasticsearch_port" {
   description = "The elasticsearch port where logs are going to be shipped"
+  default     = 443
 }
 
 
