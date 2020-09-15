@@ -68,5 +68,5 @@ variable "curator_unit" {
 
 variable "curator_unit_count" {
   description = "The count of the curator unit"
-  default = 1
+  default = 30
 }
