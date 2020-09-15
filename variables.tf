@@ -25,3 +25,48 @@ variable "enable_curator_cronjob" {
   default     = false
   type        = bool
 }
+
+variable "enable_elasticsearch" {
+  description = "Enable or not elasticsearch Helm Chart - change the default to true once it is ready to use"
+  default     = false
+  type        = bool
+}
+
+variable "enable_tls_elasticsearch" {
+  description = "Enable SSL or not for elasticsearch"
+  default     = "On"
+}
+
+
+variable "elasticsearch_port" {
+  description = "The elasticsearch port"
+  default = 443
+}
+
+variable "enable_kibana" {
+  description = "Enable or not kibana Helm Chart - change the default to true once it is ready to use"
+  default     = false
+  type        = bool
+}
+
+
+variable "enable_curator_job" {
+  description = "Enable or not elastic-search curator job"
+  default     = false
+  type        = bool
+}
+
+variable "curator_cronjob_schedule" {
+  description = "Schedule in of curator cron job"
+  default = "0 1 * * *"
+}
+
+variable "curator_unit" {
+  description = "Unit of the curator, e.g days, hours etc"
+  default = "days"
+}
+
+variable "curator_unit_count" {
+  description = "The count of the curator unit"
+  default = 1
+}

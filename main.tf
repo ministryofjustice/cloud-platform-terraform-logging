@@ -1,11 +1,9 @@
-
 locals {
   delete_indices = <<-EOF
               pip3 install elasticsearch-curator &&
               (curator_cli \
                 --host ${var.elasticsearch_host} \
-                --use_ssl \
-                --port 443 \
+                --port ${var.elasticsearch_port} \
                 delete_indices \
                 --filter_list '[
                   {
@@ -13,11 +11,18 @@ locals {
                     "source":"name",
                     "direction":"older",
                     "timestring": "%Y.%m.%d",
-                    "unit":"days",
-                    "unit_count":30
+                    "unit": "${var.curator_unit}",
+                    "unit_count": ${var.curator_unit_count}
                   }
                 ]')
   EOF
+}
+
+
+# elastic.co
+data "helm_repository" "elastic" {
+  name = "elastic"
+  url  = "https://helm.elastic.co"
 }
 
 # Stable Helm Chart repository
@@ -100,6 +105,32 @@ resource "helm_release" "eventrouter" {
 }
 
 #################################
+# elasticsearch curator job #
+#################################
+resource "kubernetes_job" "elasticsearch_curator_job" {
+  count = var.enable_curator_job ? 1 : 0
+  metadata {
+    name      = "elasticsearch-curator-job"
+    namespace = "logging"
+  }
+  spec {
+    template {
+      metadata {}
+      spec {
+        container {
+          name    = "curator"
+          image   = "python:alpine"
+          command = ["/bin/sh", "-c", local.delete_indices]
+        }
+        restart_policy = "Never"
+      }
+    }
+    backoff_limit = 2
+  }
+}
+
+
+#################################
 # elasticsearch curator cronjob #
 #################################
 
@@ -133,6 +164,36 @@ resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
   }
 }
 
+
+###############
+# elasticsearch #
+###############
+
+resource "helm_release" "elasticsearch" {
+  count = var.enable_elasticsearch ? 1 : 0
+  name       = "elasticsearch"
+  chart      = "elasticsearch"
+  repository = data.helm_repository.elastic.metadata[0].name
+  namespace  = kubernetes_namespace.logging.id
+  version    = "7.9.0"
+  values = [templatefile("${path.module}/templates/elasticsearch.yaml.tpl", {})]
+}
+
+###############
+# kibana #
+###############
+
+resource "helm_release" "kibana" {
+  count = var.enable_kibana ? 1 : 0
+  name       = "kibana"
+  chart      = "kibana"
+  repository = data.helm_repository.elastic.metadata[0].name
+  namespace  = kubernetes_namespace.logging.id
+  version    = "7.9.0"
+  values = [templatefile("${path.module}/templates/kibana.yaml.tpl", {})]
+}
+
+
 ###############
 # fluent-bit #
 ###############
@@ -154,6 +215,7 @@ resource "helm_release" "fluent_bit" {
     var.dependence_prometheus
   ]
 }
+
 
 #########################
 # fluent-bit config #
@@ -177,6 +239,8 @@ resource "kubernetes_config_map" "fluent_bit_config" {
     "parsers.conf"           = file("${path.module}/resources/parsers.config"),
     "output-elasticsearch.conf" = templatefile("${path.module}/resources/output-elasticsearch.config", {
       elasticsearch_host = var.elasticsearch_host
+      elasticsearch_port = var.elasticsearch_port
+      enable_tls_elasticsearch = var.enable_tls_elasticsearch
     })
   }
 
