@@ -26,6 +26,12 @@ variable "enable_fluent_bit" {
   type        = bool
 }
 
+variable "enable_fluent_es" {
+  description = "Enable or not fluent-es Helm Chart"
+  default     = true
+  type        = bool
+}
+
 variable "enable_curator_cronjob" {
   description = "Enable or not elastic-search curator cronjob - which runs every day to delete indices older than 30 days"
   default     = false

@@ -66,6 +66,7 @@ resource "kubernetes_namespace" "logging" {
 ##############
 
 resource "helm_release" "fluentd_es" {
+  count = var.enable_fluent_es ? 1 : 0
   name       = "fluentd-es"
   repository = data.helm_repository.cloud_platform.metadata[0].name
   chart      = "fluentd-es"
