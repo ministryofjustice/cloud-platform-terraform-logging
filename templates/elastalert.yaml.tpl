@@ -10,7 +10,7 @@
   rules:
     k8s_logs_critical-errors: |-
       ---
-      name: <NAME>
+      name: counter-logs
       index: kubernetes_cluster-*
 
       type: any
@@ -18,14 +18,14 @@
       filter:
       - query:
           query_string:
-            query: "kubernetes.pod_name: <POD_NAME>"  
+            query: "kubernetes.pod_name: counter"  
             analyze_wildcard: true
 
       alert:
       - "slack"
 
       slack:
-      slack_title: <TITLE>
+      slack_title: counter-logs
       slack_webhook_url: "${elastalert_slack_webhook_url}"
       slack_msg_color: warning
       
