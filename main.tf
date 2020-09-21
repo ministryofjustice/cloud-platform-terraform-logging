@@ -50,6 +50,7 @@ resource "kubernetes_namespace" "logging" {
       "cloud-platform.justice.gov.uk/source-code"                = "https://github.com/ministryofjustice/cloud-platform-infrastructure"
       "iam.amazonaws.com/permitted"                              = ".*"
       "cloud-platform.justice.gov.uk/can-tolerate-master-taints" = "true"
+      "cloud-platform.justice.gov.uk/slack-channel"              = "cloud-platform"
     }
   }
 }
