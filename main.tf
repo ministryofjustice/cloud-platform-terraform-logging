@@ -185,3 +185,47 @@ resource "kubernetes_config_map" "fluent_bit_config" {
     ignore_changes = [metadata.0.annotations]
   }
 }
+
+####################
+# Network Policies #
+####################
+
+resource "kubernetes_network_policy" "default" {
+  metadata {
+    name      = "default"
+    namespace = kubernetes_namespace.logging.id
+  }
+
+  spec {
+    pod_selector {}
+    ingress {
+      from {
+        pod_selector {}
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
+
+resource "kubernetes_network_policy" "allow_prometheus_scraping" {
+  metadata {
+    name      = "allow-prometheus-scraping"
+    namespace = kubernetes_namespace.logging.id
+  }
+
+  spec {
+    pod_selector {}
+    ingress {
+      from {
+        namespace_selector {
+          match_labels = {
+            component = "monitoring"
+          }
+        }
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
