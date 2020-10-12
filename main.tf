@@ -229,3 +229,19 @@ resource "kubernetes_network_policy" "allow_prometheus_scraping" {
     policy_types = ["Ingress"]
   }
 }
+
+##################
+# Resource Quota #
+##################
+
+resource "kubernetes_resource_quota" "namespace_quota" {
+  metadata {
+    name      = "namespace-quota"
+    namespace = kubernetes_namespace.logging.id
+  }
+  spec {
+    hard = {
+      pods = 50
+    }
+  }
+}
