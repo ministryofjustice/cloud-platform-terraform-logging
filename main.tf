@@ -245,3 +245,27 @@ resource "kubernetes_resource_quota" "namespace_quota" {
     }
   }
 }
+
+##############
+# LimitRange #
+##############
+
+resource "kubernetes_limit_range" "default" {
+  metadata {
+    name      = "limitrange"
+    namespace = kubernetes_namespace.logging.id
+  }
+  spec {
+    limit {
+      type = "Container"
+      default = {
+        cpu    = "1000m"
+        memory = "1000Mi"
+      }
+      default_request = {
+        cpu    = "10m"
+        memory = "400Mi"
+      }
+    }
+  }
+}
