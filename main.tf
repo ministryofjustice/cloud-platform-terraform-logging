@@ -241,7 +241,7 @@ resource "kubernetes_resource_quota" "namespace_quota" {
   }
   spec {
     hard = {
-      pods = 50
+      pods = 100
     }
   }
 }
