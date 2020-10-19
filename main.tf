@@ -177,7 +177,8 @@ resource "kubernetes_config_map" "fluent_bit_config" {
     "filter-kubernetes.conf" = file("${path.module}/resources/filter-kubernetes.config"),
     "parsers.conf"           = file("${path.module}/resources/parsers.config"),
     "output-elasticsearch.conf" = templatefile("${path.module}/resources/output-elasticsearch.config", {
-      elasticsearch_host = var.elasticsearch_host
+      elasticsearch_host       = var.elasticsearch_host
+      elasticsearch_audit_host = var.elasticsearch_audit_host
     })
   }
 
