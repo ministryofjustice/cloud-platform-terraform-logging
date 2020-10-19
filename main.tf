@@ -55,33 +55,6 @@ resource "kubernetes_namespace" "logging" {
   }
 }
 
-##############
-# fluentd-es #
-##############
-
-resource "helm_release" "fluentd_es" {
-  name       = "fluentd-es"
-  repository = data.helm_repository.cloud_platform.metadata[0].name
-  chart      = "fluentd-es"
-  namespace  = kubernetes_namespace.logging.id
-  version    = "2.10.0"
-
-  values = [templatefile("${path.module}/templates/fluentd-es.yaml.tpl", {
-    elasticsearch_host       = var.elasticsearch_host
-    elasticsearch_audit_host = var.elasticsearch_audit_host
-    cluster_name             = terraform.workspace
-  })]
-
-  depends_on = [
-    var.dependence_priority_classes,
-    var.dependence_prometheus
-  ]
-
-  lifecycle {
-    ignore_changes = [keyring]
-  }
-}
-
 ###############
 # EventRouter #
 ###############
@@ -96,8 +69,6 @@ resource "helm_release" "eventrouter" {
     name  = "sink"
     value = "stdout"
   }
-
-  depends_on = [helm_release.fluentd_es]
 }
 
 #################################
@@ -150,7 +121,6 @@ resource "helm_release" "fluent_bit" {
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {})]
 
   depends_on = [
-    kubernetes_namespace.logging,
     kubernetes_config_map.fluent_bit_config,
     var.dependence_prometheus
   ]
