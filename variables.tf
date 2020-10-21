@@ -12,7 +12,7 @@ variable "elasticsearch_audit_host" {
 
 variable "enable_fluent_bit" {
   description = "Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use"
-  default     = false
+  default     = true
   type        = bool
 }
 
