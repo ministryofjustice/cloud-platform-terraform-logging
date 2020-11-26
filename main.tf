@@ -62,7 +62,7 @@ resource "kubernetes_namespace" "logging" {
 
 resource "helm_release" "eventrouter" {
   name       = "eventrouter"
-  repository = data.helm_repository.stable.metadata[0].name
+  repository = data.helm_repository.cloud_platform.metadata[0].name
   chart      = "eventrouter"
   namespace  = kubernetes_namespace.logging.id
 
