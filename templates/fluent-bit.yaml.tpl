@@ -16,3 +16,7 @@ tolerations:
     operator: "Equal"
     value: "true"
     effect: "NoSchedule"
+  - key: "ingress-node"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule" 
