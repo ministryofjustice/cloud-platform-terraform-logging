@@ -1,3 +1,7 @@
+image:
+  fluent_bit:
+    repository: ${repository}
+
 metrics:
   enabled: true
   serviceMonitor:

@@ -117,9 +117,11 @@ resource "helm_release" "fluent_bit" {
   chart      = "fluent-bit"
   repository = data.helm_repository.stable.metadata[0].name
   namespace  = kubernetes_namespace.logging.id
-  version    = "2.10.0"
+  version    = "2.10.3"
 
-  values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {})]
+  values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
+    repository = var.eks ? "754256621582.dkr.ecr.eu-west-2.amazonaws.com/cloud-platform/fluent-bit" : "fluent/fluent-bit"
+  })]
 
   depends_on = [
     kubernetes_config_map.fluent_bit_config,
