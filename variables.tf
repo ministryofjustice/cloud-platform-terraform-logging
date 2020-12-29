@@ -21,3 +21,9 @@ variable "enable_curator_cronjob" {
   default     = false
   type        = bool
 }
+
+variable "eks" {
+  description = "Required to deploy DockerHub credentials secret - Helm charts use them in imagePullSecrets field to avoid dockerhub API limitations"
+  default     = false
+  type        = bool
+}
