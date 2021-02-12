@@ -95,7 +95,7 @@ resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
           spec {
             container {
               name    = "curator"
-              image   = "python:alpine"
+              image   = "python:3.8.7-alpine3.13"
               command = ["/bin/sh", "-c", local.delete_indices]
             }
             restart_policy = "OnFailure"
