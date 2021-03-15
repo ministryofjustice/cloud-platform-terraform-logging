@@ -20,17 +20,6 @@ locals {
   EOF
 }
 
-# Stable Helm Chart repository
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://charts.helm.sh/stable"
-}
-
-data "helm_repository" "cloud_platform" {
-  name = "cloud-platform"
-  url  = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
-}
-
 ###################
 # K8S - Namespace #
 ###################
@@ -62,7 +51,7 @@ resource "kubernetes_namespace" "logging" {
 
 resource "helm_release" "eventrouter" {
   name       = "eventrouter"
-  repository = data.helm_repository.cloud_platform.metadata[0].name
+  repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
   chart      = "eventrouter"
   namespace  = kubernetes_namespace.logging.id
 
@@ -115,7 +104,7 @@ resource "helm_release" "fluent_bit" {
 
   name       = "fluent-bit"
   chart      = "fluent-bit"
-  repository = data.helm_repository.stable.metadata[0].name
+  repository = "https://charts.helm.sh/stable"
   namespace  = kubernetes_namespace.logging.id
   version    = "2.10.3"
 
