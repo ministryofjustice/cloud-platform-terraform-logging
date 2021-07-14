@@ -141,6 +141,7 @@ resource "kubernetes_config_map" "fluent_bit_config" {
     "output-elasticsearch.conf" = templatefile("${path.module}/resources/output-elasticsearch.config", {
       elasticsearch_host       = var.elasticsearch_host
       elasticsearch_audit_host = var.elasticsearch_audit_host
+      cluster                  = terraform.workspace
     })
   }
 
