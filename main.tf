@@ -1,22 +1,22 @@
 
 locals {
   delete_indices = <<-EOF
-              pip3 install elasticsearch-curator &&
-              (curator_cli \
-                --host ${var.elasticsearch_host} \
-                --use_ssl \
-                --port 443 \
-                delete_indices \
-                --filter_list '[
-                  {
-                    "filtertype":"age",
-                    "source":"name",
-                    "direction":"older",
-                    "timestring": "%Y.%m.%d",
-                    "unit":"days",
-                    "unit_count":30
-                  }
-                ]')
+    pip3 install elasticsearch-curator &&
+    (curator_cli \
+      --host ${var.elasticsearch_host} \
+      --use_ssl \
+      --port 443 \
+      delete-indices \
+      --filter_list '[
+        {
+          "filtertype":"age",
+          "source":"name",
+          "direction":"older",
+          "timestring": "%Y.%m.%d",
+          "unit":"days",
+          "unit_count":30
+        }
+    ]')
   EOF
 }
 
