@@ -79,6 +79,7 @@ resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
       metadata {}
       spec {
         backoff_limit = 2
+        ttl_seconds_after_finished = 172800
         template {
           metadata {}
           spec {
