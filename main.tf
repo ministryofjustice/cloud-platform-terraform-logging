@@ -233,3 +233,10 @@ resource "kubernetes_limit_range" "default" {
     }
   }
 }
+
+#########################
+# prometheus rule alert #
+#########################
+resource "kubectl_manifest" "prometheus_rule_alert" {
+    yaml_body = file("${path.module}/resources/prometheusrule-alerts/alerts.yaml")
+}

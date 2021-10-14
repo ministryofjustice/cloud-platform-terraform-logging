@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fluent-bit-errors
+  namespace: logging
+  labels:
+    prometheus: cloud-platform
+spec:
+  groups:
+  - name: fluentbit
+    rules:
+    - alert: FluentbitTooManyErrors
+      expr: rate(fluentbit_output_retries_failed_total[10m]) > 0
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        message: Fluentbit is erroring. Check the logs.
