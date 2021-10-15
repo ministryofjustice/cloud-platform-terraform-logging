@@ -79,6 +79,7 @@ resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
       metadata {}
       spec {
         backoff_limit = 2
+        ttl_seconds_after_finished = 172800
         template {
           metadata {}
           spec {
@@ -232,4 +233,11 @@ resource "kubernetes_limit_range" "default" {
       }
     }
   }
+}
+
+#########################
+# prometheus rule alert #
+#########################
+resource "kubectl_manifest" "prometheus_rule_alert" {
+    yaml_body = file("${path.module}/resources/prometheusrule-alerts/alerts.yaml")
 }
