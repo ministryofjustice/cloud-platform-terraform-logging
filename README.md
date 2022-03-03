@@ -64,3 +64,6 @@ No Modules.
 No output.
 
 <!--- END_TF_DOCS --->
+
+Reference:
+https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit
