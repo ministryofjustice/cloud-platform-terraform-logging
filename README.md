@@ -17,16 +17,54 @@ module "logging" {
 }
 ```
 
+<!--- BEGIN_TF_DOCS --->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.13 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| helm | n/a |
+| kubectl | n/a |
+| kubernetes | n/a |
+
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [helm_release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) |
+| [kubectl_manifest](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) |
+| [kubernetes_cron_job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/cron_job) |
+| [kubernetes_limit_range](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) |
+| [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) |
+| [kubernetes_network_policy](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/network_policy) |
+| [kubernetes_resource_quota](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/resource_quota) |
+
 ## Inputs
 
-| Name                         | Description                                        | Type | Default | Required |
-|------------------------------|----------------------------------------------------|:----:|:-------:|:--------:|
-| elasticsearch_host           | The ES host where logs are going to be sent        | string   | false | yes |
-| elasticsearch_audit_host     | The ES audit host where logs are going to be sent  | string   | false | no |
-| dependence_prometheus        | Prometheus Dependence variable                     | string   |       | yes |
-| enable_fluent_bit            | Enable or not fluent-bit Helm Ch                   | string   | false | yes |
-| enable_curator_cronjob       | Enable elastic-search curator cronjob              | boolean  | false | yes |
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| dependence\_prometheus | Prometheus module dependence - it is required in order to use this module. | `any` | n/a | yes |
+| eks | Required to deploy DockerHub credentials secret - Helm charts use them in imagePullSecrets field to avoid dockerhub API limitations | `bool` | `false` | no |
+| elasticsearch\_audit\_host | The elasticsearch audit host where logs are going to be shipped | `any` | n/a | yes |
+| elasticsearch\_host | The elasticsearch host where logs are going to be shipped | `any` | n/a | yes |
+| enable\_curator\_cronjob | Enable or not elastic-search curator cronjob - which runs every day to delete indices older than 30 days | `bool` | `false` | no |
+| enable\_fluent\_bit | Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use | `bool` | `true` | no |
 
 ## Outputs
 
-None
+No output.
+
+<!--- END_TF_DOCS --->
+
+Reference:
+https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit
+

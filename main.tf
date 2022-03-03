@@ -105,51 +105,22 @@ resource "helm_release" "fluent_bit" {
 
   name       = "fluent-bit"
   chart      = "fluent-bit"
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://fluent.github.io/helm-charts"
   namespace  = kubernetes_namespace.logging.id
-  version    = "2.10.3"
+  version    = "0.16.4"
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
-    repository = var.eks ? "754256621582.dkr.ecr.eu-west-2.amazonaws.com/cloud-platform/fluent-bit" : "fluent/fluent-bit"
+    elasticsearch_host       = var.elasticsearch_host
+    elasticsearch_audit_host = var.elasticsearch_audit_host
+    cluster                  = terraform.workspace
+    fluentbit_app_version    = "1.8.4" # Pinned to version, because of this issue https://github.com/fluent/fluent-bit/issues/4260
   })]
 
   depends_on = [
-    kubernetes_config_map.fluent_bit_config,
     var.dependence_prometheus
   ]
 }
 
-#########################
-# fluent-bit config #
-#########################
-
-resource "kubernetes_config_map" "fluent_bit_config" {
-  count = var.enable_fluent_bit ? 1 : 0
-
-  metadata {
-    name      = "fluent-bit-config"
-    namespace = kubernetes_namespace.logging.id
-    labels = {
-      "k8s-app" = "fluent-bit"
-    }
-  }
-
-  data = {
-    "fluent-bit.conf"        = file("${path.module}/resources/fluent-bit.config"),
-    "input-kubernetes.conf"  = file("${path.module}/resources/input-kubernetes.config"),
-    "filter-kubernetes.conf" = file("${path.module}/resources/filter-kubernetes.config"),
-    "parsers.conf"           = file("${path.module}/resources/parsers.config"),
-    "output-elasticsearch.conf" = templatefile("${path.module}/resources/output-elasticsearch.config", {
-      elasticsearch_host       = var.elasticsearch_host
-      elasticsearch_audit_host = var.elasticsearch_audit_host
-      cluster                  = terraform.workspace
-    })
-  }
-
-  lifecycle {
-    ignore_changes = [metadata.0.annotations]
-  }
-}
 
 ####################
 # Network Policies #
@@ -242,3 +213,4 @@ resource "kubectl_manifest" "prometheus_rule_alert" {
   depends_on = [helm_release.fluent_bit]
   yaml_body  = file("${path.module}/resources/prometheusrule-alerts/alerts.yaml")
 }
+

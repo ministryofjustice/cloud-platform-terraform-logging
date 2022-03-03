@@ -27,3 +27,4 @@ variable "eks" {
   default     = false
   type        = bool
 }
+
