@@ -107,12 +107,13 @@ resource "helm_release" "fluent_bit" {
   chart      = "fluent-bit"
   repository = "https://fluent.github.io/helm-charts"
   namespace  = kubernetes_namespace.logging.id
-  version    = "0.19.20"
+  version    = "0.16.4"
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
     elasticsearch_host       = var.elasticsearch_host
     elasticsearch_audit_host = var.elasticsearch_audit_host
     cluster                  = terraform.workspace
+    fluentbit_app_version    = "1.8.3" # Pinned to version, because of this issue https://github.com/fluent/fluent-bit/issues/4260
   })]
 
   depends_on = [

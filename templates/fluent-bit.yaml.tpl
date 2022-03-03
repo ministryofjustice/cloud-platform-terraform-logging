@@ -1,6 +1,8 @@
 
 image:
   repository: fluent/fluent-bit
+  tag: "${fluentbit_app_version}"
+  pullPolicy: Always
 
 serviceMonitor:
   enabled: true
@@ -135,7 +137,7 @@ config:
         Logstash_Format On
         Replace_Dots    On
         Generate_ID     On
-        Retry_Limit     10
+        Retry_Limit     False
     [OUTPUT]
         Name            es
         Match           nginx-ingress.*
@@ -148,7 +150,7 @@ config:
         Logstash_Format On
         Replace_Dots    On
         Generate_ID     On
-        Retry_Limit     10
+        Retry_Limit     False
     [OUTPUT]
         Name            es
         Match           nginx-ingress-modsec.*
@@ -161,7 +163,7 @@ config:
         Logstash_Format On
         Replace_Dots    On
         Generate_ID     On
-        Retry_Limit     10
+        Retry_Limit     False
     [OUTPUT]
         Name            es
         Match           eventrouter.*
@@ -174,7 +176,7 @@ config:
         Logstash_Format On
         Replace_Dots    On
         Generate_ID     On
-        Retry_Limit     10
+        Retry_Limit     False
     [OUTPUT]
         Name            es
         Match           kube-apiserver-audit.*
@@ -187,7 +189,7 @@ config:
         Logstash_Format On
         Replace_Dots    On
         Generate_ID     On
-        Retry_Limit     10
+        Retry_Limit     5
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
