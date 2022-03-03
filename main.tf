@@ -113,7 +113,7 @@ resource "helm_release" "fluent_bit" {
     elasticsearch_host       = var.elasticsearch_host
     elasticsearch_audit_host = var.elasticsearch_audit_host
     cluster                  = terraform.workspace
-    fluentbit_app_version    = "1.8.3" # Pinned to version, because of this issue https://github.com/fluent/fluent-bit/issues/4260
+    fluentbit_app_version    = "1.8.4" # Pinned to version, because of this issue https://github.com/fluent/fluent-bit/issues/4260
   })]
 
   depends_on = [
