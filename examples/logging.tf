@@ -12,6 +12,4 @@ module "logging" {
   dependence_prometheus       = "status"
   enable_curator_cronjob      = false
   enable_fluent_bit           = false
-
 }
-

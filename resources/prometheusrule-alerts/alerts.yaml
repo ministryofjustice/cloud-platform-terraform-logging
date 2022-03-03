@@ -17,3 +17,4 @@ spec:
         severity: warning
       annotations:
         message: Fluentbit is erroring. Check the logs.
+

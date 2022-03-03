@@ -9,3 +9,4 @@ variable "elasticsearch_host" {
 variable "elasticsearch_audit_host" {
   description = "The elasticsearch audit host where logs are going to be shipped"
 }
+
