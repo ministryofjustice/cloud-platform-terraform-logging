@@ -17,16 +17,12 @@ module "logging" {
 }
 ```
 
-## Inputs
+<!--- BEGIN_TF_DOCS --->
+## Requirements
 
-| Name                         | Description                                        | Type | Default | Required |
-|------------------------------|----------------------------------------------------|:----:|:-------:|:--------:|
-| elasticsearch_host           | The ES host where logs are going to be sent        | string   | false | yes |
-| elasticsearch_audit_host     | The ES audit host where logs are going to be sent  | string   | false | no |
-| dependence_prometheus        | Prometheus Dependence variable                     | string   |       | yes |
-| enable_fluent_bit            | Enable or not fluent-bit Helm Ch                   | string   | false | yes |
-| enable_curator_cronjob       | Enable elastic-search curator cronjob              | boolean  | false | yes |
+| Name | Version |
+|------|---------|
+| terraform | >= 0.14 |
+| github | ~> 4.14.0 |
 
-## Outputs
-
-None
+<!--- END_TF_DOCS --->
