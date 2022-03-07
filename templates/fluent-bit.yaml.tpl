@@ -87,8 +87,7 @@ config:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         K8S-Logging.Parser  On
         K8S-Logging.Exclude On
-        Merge_Log           On
-        Merge_Log_Key       log_processed
+        Merge_Log           Off
     [FILTER]
         Name                kubernetes
         Match               eventrouter.*
