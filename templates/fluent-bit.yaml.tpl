@@ -88,6 +88,7 @@ config:
         K8S-Logging.Parser  On
         K8S-Logging.Exclude On
         Merge_Log           Off
+        Buffer_Size         1MB
     [FILTER]
         Name                kubernetes
         Match               eventrouter.*
@@ -99,6 +100,7 @@ config:
         K8S-Logging.Exclude On
         Merge_Log           On
         Merge_Log_Key       log_processed
+        Buffer_Size         1MB
     [FILTER]
         Name                kubernetes
         Match               nginx-ingress.*
@@ -110,6 +112,7 @@ config:
         K8S-Logging.Exclude On
         Merge_Log           On
         Merge_Log_Key       log_processed
+        Buffer_Size         1MB
     [FILTER]
         Name                kubernetes
         Match               nginx-ingress-modsec.*
@@ -121,6 +124,7 @@ config:
         K8S-Logging.Exclude On
         Merge_Log           On
         Merge_Log_Key       log_processed
+        Buffer_Size         1MB
 
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
