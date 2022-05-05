@@ -68,3 +68,6 @@ No output.
 Reference:
 https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit
 
+## Note
+
+The "main" branch stores the releases for EKS, and the "last-kops-release-do-not-delete" serves as a kops cluster features branch, which was used for "live-1" cluster.
