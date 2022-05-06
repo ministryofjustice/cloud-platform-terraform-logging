@@ -53,7 +53,6 @@ No Modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | dependence\_prometheus | Prometheus module dependence - it is required in order to use this module. | `any` | n/a | yes |
-| eks | Required to deploy DockerHub credentials secret - Helm charts use them in imagePullSecrets field to avoid dockerhub API limitations | `bool` | `false` | no |
 | elasticsearch\_audit\_host | The elasticsearch audit host where logs are going to be shipped | `any` | n/a | yes |
 | elasticsearch\_host | The elasticsearch host where logs are going to be shipped | `any` | n/a | yes |
 | enable\_curator\_cronjob | Enable or not elastic-search curator cronjob - which runs every day to delete indices older than 30 days | `bool` | `false` | no |
