@@ -48,14 +48,6 @@ config:
         Name              tail
         Tag               nginx-ingress.*
         Path              /var/log/containers/*nx-*.log
-        Exclude_Path      *modsec-controller-*.log
-        Parser            generic-json
-        Refresh_Interval  5
-        Mem_Buf_Limit     5MB
-    [INPUT]
-        Name              tail
-        Tag               nginx-ingress-modsec.*
-        Path              /var/log/containers/*modsec-controller-*.log
         Parser            generic-json
         Refresh_Interval  5
         Mem_Buf_Limit     5MB
@@ -113,18 +105,6 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
-    [FILTER]
-        Name                kubernetes
-        Match               nginx-ingress-modsec.*
-        Kube_Tag_Prefix     nginx-ingress.var.log.containers.nginx-ingress-modsec*
-        Kube_URL            https://kubernetes.default.svc:443
-        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
-        K8S-Logging.Parser  On
-        K8S-Logging.Exclude On
-        Merge_Log           On
-        Merge_Log_Key       log_processed
-        Buffer_Size         1MB
 
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
@@ -149,19 +129,6 @@ config:
         Type            _doc
         Time_Key        @timestamp
         Logstash_Prefix ${cluster}_kubernetes_ingress
-        tls             On
-        Logstash_Format On
-        Replace_Dots    On
-        Generate_ID     On
-        Retry_Limit     False
-    [OUTPUT]
-        Name            es
-        Match           nginx-ingress-modsec.*
-        Host            ${elasticsearch_host}
-        Port            443
-        Type            _doc
-        Time_Key        @timestamp
-        Logstash_Prefix ${cluster}_kubernetes_ingress_modsec
         tls             On
         Logstash_Format On
         Replace_Dots    On
