@@ -115,7 +115,7 @@ config:
         Port            443
         Type            _doc
         Time_Key        @timestamp
-        Logstash_Prefix ${cluster}_kubernetes_cluster
+        Logstash_Prefix ${cluster}_cluster
         tls             On
         Logstash_Format On
         Replace_Dots    On
@@ -128,7 +128,7 @@ config:
         Port            443
         Type            _doc
         Time_Key        @timestamp
-        Logstash_Prefix ${cluster}_kubernetes_ingress
+        Logstash_Prefix ${cluster}_ingress
         tls             On
         Logstash_Format On
         Replace_Dots    On
