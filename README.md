@@ -22,45 +22,48 @@ module "logging" {
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| helm | n/a |
-| kubectl | n/a |
-| kubernetes | n/a |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | ~> 2.6.0 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | n/a |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
 
 ## Modules
 
-No Modules.
+No modules.
 
 ## Resources
 
-| Name |
-|------|
-| [helm_release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) |
-| [kubectl_manifest](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) |
-| [kubernetes_cron_job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/cron_job) |
-| [kubernetes_limit_range](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) |
-| [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) |
-| [kubernetes_network_policy](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/network_policy) |
-| [kubernetes_resource_quota](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/resource_quota) |
+| Name | Type |
+|------|------|
+| [helm_release.eventrouter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.fluent_bit](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [kubectl_manifest.prometheus_rule_alert](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
+| [kubernetes_cron_job.elasticsearch_curator_cronjob](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/cron_job) | resource |
+| [kubernetes_limit_range.default](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) | resource |
+| [kubernetes_namespace.logging](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
+| [kubernetes_network_policy.allow_prometheus_scraping](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/network_policy) | resource |
+| [kubernetes_network_policy.default](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/network_policy) | resource |
+| [kubernetes_resource_quota.namespace_quota](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/resource_quota) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| dependence\_prometheus | Prometheus module dependence - it is required in order to use this module. | `any` | n/a | yes |
-| elasticsearch\_audit\_host | The elasticsearch audit host where logs are going to be shipped | `any` | n/a | yes |
-| elasticsearch\_host | The elasticsearch host where logs are going to be shipped | `any` | n/a | yes |
-| enable\_curator\_cronjob | Enable or not elastic-search curator cronjob - which runs every day to delete indices older than 30 days | `bool` | `false` | no |
-| enable\_fluent\_bit | Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use | `bool` | `true` | no |
+| <a name="input_dependence_prometheus"></a> [dependence\_prometheus](#input\_dependence\_prometheus) | Prometheus module dependence - it is required in order to use this module. | `any` | n/a | yes |
+| <a name="input_elasticsearch_audit_host"></a> [elasticsearch\_audit\_host](#input\_elasticsearch\_audit\_host) | The elasticsearch audit host where logs are going to be shipped | `any` | n/a | yes |
+| <a name="input_elasticsearch_host"></a> [elasticsearch\_host](#input\_elasticsearch\_host) | The elasticsearch host where logs are going to be shipped | `any` | n/a | yes |
+| <a name="input_enable_curator_cronjob"></a> [enable\_curator\_cronjob](#input\_enable\_curator\_cronjob) | Enable or not elastic-search curator cronjob - which runs every day to delete indices older than 30 days | `bool` | `false` | no |
+| <a name="input_enable_fluent_bit"></a> [enable\_fluent\_bit](#input\_enable\_fluent\_bit) | Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use | `bool` | `true` | no |
 
 ## Outputs
 
-No output.
+No outputs.
 
 <!--- END_TF_DOCS --->
 
