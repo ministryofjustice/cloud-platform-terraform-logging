@@ -1,25 +1,4 @@
 
-locals {
-  delete_indices = <<-EOF
-    pip3 install elasticsearch-curator==5.8.3 &&
-    (curator_cli \
-      --host ${var.elasticsearch_host} \
-      --use_ssl \
-      --port 443 \
-      delete_indices \
-      --filter_list '[
-        {
-          "filtertype":"age",
-          "source":"name",
-          "direction":"older",
-          "timestring": "%Y.%m.%d",
-          "unit":"days",
-          "unit_count":30
-        }
-    ]')
-  EOF
-}
-
 ###################
 # K8S - Namespace #
 ###################
@@ -58,41 +37,6 @@ resource "helm_release" "eventrouter" {
   set {
     name  = "sink"
     value = "stdout"
-  }
-}
-
-#################################
-# elasticsearch curator cronjob #
-#################################
-
-resource "kubernetes_cron_job" "elasticsearch_curator_cronjob" {
-  count = var.enable_curator_cronjob ? 1 : 0
-  metadata {
-    name      = "elasticsearch-curator-cronjob"
-    namespace = "logging"
-  }
-  spec {
-    failed_jobs_history_limit     = 3
-    schedule                      = "0 1 * * *"
-    successful_jobs_history_limit = 3
-    job_template {
-      metadata {}
-      spec {
-        backoff_limit              = 2
-        ttl_seconds_after_finished = 172800
-        template {
-          metadata {}
-          spec {
-            container {
-              name    = "curator"
-              image   = "python:3.8.7-alpine3.13"
-              command = ["/bin/sh", "-c", local.delete_indices]
-            }
-            restart_policy = "OnFailure"
-          }
-        }
-      }
-    }
   }
 }
 
