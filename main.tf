@@ -1,4 +1,3 @@
-
 ###################
 # K8S - Namespace #
 ###################
@@ -33,7 +32,7 @@ resource "helm_release" "eventrouter" {
   repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
   chart      = "eventrouter"
   namespace  = kubernetes_namespace.logging.id
-  version = "0.3.3"
+  version    = "0.3.3"
 
   set {
     name  = "sink"
