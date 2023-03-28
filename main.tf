@@ -56,6 +56,7 @@ resource "helm_release" "fluent_bit" {
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
     elasticsearch_host       = var.elasticsearch_host
     elasticsearch_audit_host = var.elasticsearch_audit_host
+    elasticsearch_modsec_audit_host = var.elasticsearch_modsec_audit_host
     cluster                  = terraform.workspace
     fluentbit_app_version    = "1.8.4" # Pinned to version, because of this issue https://github.com/fluent/fluent-bit/issues/4260
   })]

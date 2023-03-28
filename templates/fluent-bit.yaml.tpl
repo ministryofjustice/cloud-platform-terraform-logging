@@ -121,6 +121,7 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           nginx-ingress.*
@@ -134,6 +135,7 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           eventrouter.*
@@ -147,6 +149,7 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           kube-apiserver-audit.*
@@ -160,6 +163,7 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     5
+        Suppress_Type_Name On
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
