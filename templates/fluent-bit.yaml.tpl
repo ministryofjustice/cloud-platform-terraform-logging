@@ -21,6 +21,20 @@ tolerations:
     value: "true"
     effect: "NoSchedule" 
 
+luaScripts:
+  redaction.lua: |
+    function modsec_audit_redact(tag, timestamp, record)
+      content = record["log"]
+      match = string.match(content, '"data"')
+      if match then
+        data = string.gsub(content, '"data"', 'REDACTED')
+        record["log"] = 'REDACTED'
+        return 1, timestamp, record
+      else
+        return 0, 0, record
+      end
+    end
+    
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
@@ -93,6 +107,13 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
+
+    # Redaction of fields
+    [FILTER]
+        Name    lua
+        Match   nginx-ingress.*
+        script  /fluent-bit/scripts/redaction.lua
+        call    modsec_audit_redact
     [FILTER]
         Name                kubernetes
         Match               nginx-ingress.*
@@ -102,6 +123,7 @@ config:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         K8S-Logging.Parser  On
         K8S-Logging.Exclude On
+        Keep_Log            Off
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
