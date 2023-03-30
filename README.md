@@ -59,6 +59,7 @@ No modules.
 | <a name="input_dependence_prometheus"></a> [dependence\_prometheus](#input\_dependence\_prometheus) | Prometheus module dependence - it is required in order to use this module. | `any` | n/a | yes |
 | <a name="input_elasticsearch_audit_host"></a> [elasticsearch\_audit\_host](#input\_elasticsearch\_audit\_host) | The elasticsearch audit host where logs are going to be shipped | `any` | n/a | yes |
 | <a name="input_elasticsearch_host"></a> [elasticsearch\_host](#input\_elasticsearch\_host) | The elasticsearch host where logs are going to be shipped | `any` | n/a | yes |
+| <a name="input_elasticsearch_modsec_audit_host"></a> [elasticsearch\_modsec\_audit\_host](#input\_elasticsearch\_modsec\_audit\_host) | The elasticsearch host where modsec audit logs are going to be shipped | `any` | n/a | yes |
 | <a name="input_enable_curator_cronjob"></a> [enable\_curator\_cronjob](#input\_enable\_curator\_cronjob) | Enable or not elastic-search curator cronjob - which runs every day to delete indices older than 30 days | `bool` | `false` | no |
 | <a name="input_enable_fluent_bit"></a> [enable\_fluent\_bit](#input\_enable\_fluent\_bit) | Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use | `bool` | `true` | no |
 
