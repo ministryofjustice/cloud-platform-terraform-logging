@@ -25,10 +25,10 @@ luaScripts:
   redaction.lua: |
     function modsec_audit_redact(tag, timestamp, record)
       content = record["log"]
-      match = string.match(content, '"data"')
+      match = string.match(content, '"data":"Matched Data')
       if match then
-        data = string.gsub(content, '"data"', 'REDACTED')
-        record["log"] = 'REDACTED'
+        redacted_content = string.gsub(content, '"data":"Matched Data.*"severity"', '"data":"REDACTED","severity"')
+        record["log"] = redacted_content
         return 1, timestamp, record
       else
         return 0, 0, record
@@ -61,6 +61,13 @@ config:
     [INPUT]
         Name              tail
         Tag               nginx-ingress.*
+        Path              /var/log/containers/*nx-*.log
+        Parser            generic-json
+        Refresh_Interval  5
+        Mem_Buf_Limit     5MB
+    [INPUT]
+        Name              tail
+        Tag               cp-ingress-modsec.*
         Path              /var/log/containers/*nx-*.log
         Parser            generic-json
         Refresh_Interval  5
@@ -127,6 +134,19 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
+    [FILTER]
+        Name                kubernetes
+        Match               cp-ingress-modsec.*
+        Kube_Tag_Prefix     cp-ingress-modsec.var.log.containers.cp-ingress-modsec*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+        Keep_Log            Off
+        Merge_Log           On
+        Merge_Log_Key       log_processed
+        Buffer_Size         1MB
 
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
@@ -148,6 +168,20 @@ config:
         Name            es
         Match           nginx-ingress.*
         Host            ${elasticsearch_host}
+        Port            443
+        Type            _doc
+        Time_Key        @timestamp
+        Logstash_Prefix ${cluster}_kubernetes_ingress
+        tls             On
+        Logstash_Format On
+        Replace_Dots    On
+        Generate_ID     On
+        Retry_Limit     False
+        Suppress_Type_Name On
+    [OUTPUT]
+        Name            es
+        Match           cp-ingress-modsec.*
+        Host            ${elasticsearch_modsec_audit_host}
         Port            443
         Type            _doc
         Time_Key        @timestamp
