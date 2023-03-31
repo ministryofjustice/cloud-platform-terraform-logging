@@ -134,6 +134,11 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
+    # Include only Modsecurity audit logs
+    [FILTER]
+        Name    grep
+        Match   cp-ingress-modsec.*
+        regex   log (modsecurity|OWASP_CRS|owasp-modsecurity-crs)
     [FILTER]
         Name                kubernetes
         Match               cp-ingress-modsec.*
