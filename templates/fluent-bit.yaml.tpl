@@ -21,19 +21,6 @@ tolerations:
     value: "true"
     effect: "NoSchedule" 
 
-luaScripts:
-  redaction.lua: |
-    function modsec_audit_redact(tag, timestamp, record)
-      content = record["log"]
-      match = string.match(content, '"data":"Matched Data')
-      if match then
-        redacted_content = string.gsub(content, '"data":"Matched Data.*"severity"', '"data":"REDACTED","severity"')
-        record["log"] = redacted_content
-        return 1, timestamp, record
-      else
-        return 0, 0, record
-      end
-    end
     
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
@@ -117,10 +104,9 @@ config:
 
     # Redaction of fields
     [FILTER]
-        Name    lua
-        Match   nginx-ingress.*
-        script  /fluent-bit/scripts/redaction.lua
-        call    modsec_audit_redact
+        Name                grep
+        Match               nginx-ingress.*
+        Exclude             log (ModSecurity-nginx)
     [FILTER]
         Name                kubernetes
         Match               nginx-ingress.*
@@ -136,9 +122,9 @@ config:
         Buffer_Size         1MB
     # Include only Modsecurity audit logs
     [FILTER]
-        Name    grep
-        Match   cp-ingress-modsec.*
-        regex   log (modsecurity|OWASP_CRS|owasp-modsecurity-crs)
+        Name                grep
+        Match               cp-ingress-modsec.*
+        regex               log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
     [FILTER]
         Name                kubernetes
         Match               cp-ingress-modsec.*
