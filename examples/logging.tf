@@ -8,6 +8,7 @@ module "logging" {
 
   elasticsearch_host       = "placeholder-elasticsearch"
   elasticsearch_audit_host = ""
+  elasticsearch_modsec_audit_host = ""
 
   dependence_prometheus  = "status"
   enable_curator_cronjob = false

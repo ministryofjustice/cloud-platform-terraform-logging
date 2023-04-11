@@ -21,6 +21,7 @@ tolerations:
     value: "true"
     effect: "NoSchedule" 
 
+    
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
@@ -47,6 +48,13 @@ config:
     [INPUT]
         Name              tail
         Tag               nginx-ingress.*
+        Path              /var/log/containers/*nx-*.log
+        Parser            generic-json
+        Refresh_Interval  5
+        Mem_Buf_Limit     5MB
+    [INPUT]
+        Name              tail
+        Tag               cp-ingress-modsec.*
         Path              /var/log/containers/*nx-*.log
         Parser            generic-json
         Refresh_Interval  5
@@ -93,6 +101,12 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
+
+    # Redaction of fields
+    [FILTER]
+        Name                grep
+        Match               nginx-ingress.*
+        Exclude             log (ModSecurity-nginx)
     [FILTER]
         Name                kubernetes
         Match               nginx-ingress.*
@@ -102,6 +116,25 @@ config:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         K8S-Logging.Parser  On
         K8S-Logging.Exclude On
+        Keep_Log            Off
+        Merge_Log           On
+        Merge_Log_Key       log_processed
+        Buffer_Size         1MB
+    # Include only Modsecurity audit logs
+    [FILTER]
+        Name                grep
+        Match               cp-ingress-modsec.*
+        regex               log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
+    [FILTER]
+        Name                kubernetes
+        Match               cp-ingress-modsec.*
+        Kube_Tag_Prefix     cp-ingress-modsec.var.log.containers.cp-ingress-modsec*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+        Keep_Log            Off
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
@@ -121,6 +154,7 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           nginx-ingress.*
@@ -134,6 +168,21 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        Suppress_Type_Name On
+    [OUTPUT]
+        Name            es
+        Match           cp-ingress-modsec.*
+        Host            ${elasticsearch_modsec_audit_host}
+        Port            443
+        Type            _doc
+        Time_Key        @timestamp
+        Logstash_Prefix ${cluster}_kubernetes_ingress
+        tls             On
+        Logstash_Format On
+        Replace_Dots    On
+        Generate_ID     On
+        Retry_Limit     False
+        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           eventrouter.*
@@ -147,6 +196,7 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           kube-apiserver-audit.*
@@ -160,6 +210,7 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     5
+        Suppress_Type_Name On
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
