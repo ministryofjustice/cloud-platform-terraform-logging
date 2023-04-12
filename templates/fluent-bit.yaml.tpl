@@ -153,9 +153,6 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
-        AWS_AUTH On
-        AWS_REGION eu-west-2
-        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           nginx-ingress.*
@@ -169,7 +166,6 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
-        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           cp-ingress-modsec.*
@@ -199,9 +195,6 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
-        AWS_AUTH On
-        AWS_REGION eu-west-2
-        Suppress_Type_Name On
     [OUTPUT]
         Name            es
         Match           kube-apiserver-audit.*
@@ -215,9 +208,6 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     5
-        AWS_AUTH On
-        AWS_REGION eu-west-2
-        Suppress_Type_Name On
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
