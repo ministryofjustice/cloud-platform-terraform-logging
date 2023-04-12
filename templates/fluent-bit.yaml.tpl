@@ -21,7 +21,6 @@ tolerations:
     value: "true"
     effect: "NoSchedule" 
 
-    
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
@@ -154,6 +153,8 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        AWS_AUTH On
+        AWS_REGION eu-west-2
         Suppress_Type_Name On
     [OUTPUT]
         Name            es
@@ -176,12 +177,14 @@ config:
         Port            443
         Type            _doc
         Time_Key        @timestamp
-        Logstash_Prefix ${cluster}_kubernetes_ingress
+        Logstash_Prefix ${cluster}_k8s_modsec_ingress
         tls             On
         Logstash_Format On
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        AWS_AUTH On
+        AWS_REGION eu-west-2
         Suppress_Type_Name On
     [OUTPUT]
         Name            es
@@ -196,6 +199,8 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
+        AWS_AUTH On
+        AWS_REGION eu-west-2
         Suppress_Type_Name On
     [OUTPUT]
         Name            es
@@ -210,6 +215,8 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     5
+        AWS_AUTH On
+        AWS_REGION eu-west-2
         Suppress_Type_Name On
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
