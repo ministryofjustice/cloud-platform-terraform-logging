@@ -21,6 +21,38 @@ tolerations:
     value: "true"
     effect: "NoSchedule" 
 
+luaScripts:
+  cb_extract_tag_value.lua: |
+    function cb_extract_tag_value(tag, timestamp, record)
+      local github_team = string.gmatch(record["log"], '%[tag "github_team=(%a+)"%]')
+      local github_team_from_json = string.gmatch(record["log"], '"tags":%[.*"github_team=(%a+)".*%]')
+
+      local new_record = record
+      local team_matches = {}
+      local json_matches = {}
+
+      for team in github_team do
+        table.insert(team_matches, team)
+      end
+
+      for team in github_team_from_json do
+        table.insert(json_matches, team)
+      end
+
+      if #team_matches > 0 then
+        new_record["github_teams"] = team_matches
+        return 1, timestamp, new_record
+
+      elseif #json_matches > 0 then
+        new_record["github_teams"] = json_matches
+
+        return 1, timestamp, new_record
+
+      else
+        return 0, timestamp, record
+      end
+    end
+
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
@@ -124,6 +156,11 @@ config:
         Name                grep
         Match               cp-ingress-modsec.*
         regex               log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
+    [FILTER]
+        Name lua
+        Match cp-ingress-modsec.*
+        script  /fluent-bit/scripts/cb_extract_tag_value.lua
+        call cb_extract_tag_value
     [FILTER]
         Name                kubernetes
         Match               cp-ingress-modsec.*
