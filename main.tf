@@ -52,6 +52,7 @@ resource "helm_release" "fluent_bit" {
   repository = "https://fluent.github.io/helm-charts"
   namespace  = kubernetes_namespace.logging.id
   version    = "0.16.4"
+  timeout = 900
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
     elasticsearch_host       = var.elasticsearch_host
