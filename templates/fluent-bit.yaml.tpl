@@ -147,7 +147,7 @@ config:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         K8S-Logging.Parser  On
         K8S-Logging.Exclude On
-        Keep_Log            Off
+        Keep_Log            On
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
@@ -157,11 +157,6 @@ config:
         Match               cp-ingress-modsec.*
         regex               log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
     [FILTER]
-        Name lua
-        Match cp-ingress-modsec.*
-        script  /fluent-bit/scripts/cb_extract_tag_value.lua
-        call cb_extract_tag_value
-    [FILTER]
         Name                kubernetes
         Match               cp-ingress-modsec.*
         Kube_Tag_Prefix     cp-ingress-modsec.var.log.containers.cp-ingress-modsec*
@@ -170,10 +165,15 @@ config:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         K8S-Logging.Parser  On
         K8S-Logging.Exclude On
-        Keep_Log            Off
+        Keep_Log            On
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
+    [FILTER]
+        Name                lua
+        Match               cp-ingress-modsec.*
+        script              /fluent-bit/scripts/cb_extract_tag_value.lua
+        call                cb_extract_tag_value
 
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
