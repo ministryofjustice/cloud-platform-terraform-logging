@@ -24,8 +24,8 @@ tolerations:
 luaScripts:
   cb_extract_tag_value.lua: |
     function cb_extract_tag_value(tag, timestamp, record)
-      local github_team = string.gmatch(record["log"], '%[tag "github_team=(%a+)"%]')
-      local github_team_from_json = string.gmatch(record["log"], '"tags":%[.*"github_team=(%a+)".*%]')
+      local github_team = string.gmatch(record["log"], '%[tag "github_team=([%a+|%-]*)"%]')
+      local github_team_from_json = string.gmatch(record["log"], '"tags":%[.*"github_team=([%a+|%-]*)".*%]')
 
       local new_record = record
       local team_matches = {}
@@ -74,7 +74,7 @@ config:
         Exclude_Path      *nx-*.log,eventrouter-*.log
         Parser            docker
         Refresh_Interval  5
-        Mem_Buf_Limit     5MB
+        Mem_Buf_Limit     8MB
         Skip_Long_Lines   On
     [INPUT]
         Name              tail
