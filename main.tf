@@ -52,14 +52,14 @@ resource "helm_release" "fluent_bit" {
   repository = "https://fluent.github.io/helm-charts"
   namespace  = kubernetes_namespace.logging.id
   version    = "0.16.4"
-  timeout = 900
+  timeout    = 1500
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
-    elasticsearch_host       = var.elasticsearch_host
-    elasticsearch_audit_host = var.elasticsearch_audit_host
+    elasticsearch_host              = var.elasticsearch_host
+    elasticsearch_audit_host        = var.elasticsearch_audit_host
     elasticsearch_modsec_audit_host = var.elasticsearch_modsec_audit_host
-    cluster                  = terraform.workspace
-    fluentbit_app_version    = "1.8.4" # Pinned to version, because of this issue https://github.com/fluent/fluent-bit/issues/4260
+    cluster                         = terraform.workspace
+    fluentbit_app_version           = "1.8.4" # Pinned to version, because of this issue https://github.com/fluent/fluent-bit/issues/4260
   })]
 
   depends_on = [
