@@ -137,7 +137,7 @@ config:
     [FILTER]
         Name                grep
         Match               nginx-ingress.*
-        Exclude             log (ModSecurity-nginx)
+        Exclude             log /.*ModSecurity-nginx.*/
     [FILTER]
         Name                kubernetes
         Match               nginx-ingress.*
