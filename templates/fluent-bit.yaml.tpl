@@ -74,7 +74,7 @@ config:
         Exclude_Path      *nx-*.log,eventrouter-*.log
         Parser            docker
         Refresh_Interval  5
-        Mem_Buf_Limit     8MB
+        Mem_Buf_Limit     12MB
         Skip_Long_Lines   On
     [INPUT]
         Name              tail
