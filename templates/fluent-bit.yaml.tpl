@@ -232,19 +232,6 @@ config:
         Replace_Dots    On
         Generate_ID     On
         Retry_Limit     False
-    [OUTPUT]
-        Name            es
-        Match           kube-apiserver-audit.*
-        Host            ${elasticsearch_audit_host}
-        Port            443
-        Type            _doc
-        Time_Key        @timestamp
-        Logstash_Prefix kubeapi_audit
-        tls             On
-        Logstash_Format On
-        Replace_Dots    On
-        Generate_ID     On
-        Retry_Limit     5
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
@@ -268,4 +255,3 @@ config:
         Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-
