@@ -6,11 +6,9 @@
 module "logging" {
   source = "../"
 
-  elasticsearch_host       = "placeholder-elasticsearch"
-  elasticsearch_audit_host = ""
+  elasticsearch_host              = "placeholder-elasticsearch"
   elasticsearch_modsec_audit_host = ""
 
-  dependence_prometheus  = "status"
-  enable_curator_cronjob = false
-  enable_fluent_bit      = false
+  dependence_prometheus = "status"
+  enable_fluent_bit     = false
 }
