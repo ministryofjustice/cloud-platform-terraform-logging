@@ -1,7 +1,6 @@
 
 image:
   repository: fluent/fluent-bit
-  tag: "${fluentbit_app_version}"
   pullPolicy: Always
 
 serviceMonitor:
@@ -72,7 +71,7 @@ config:
         Tag               kubernetes.*
         Path              /var/log/containers/*.log
         Exclude_Path      *nx-*.log,eventrouter-*.log
-        Parser            docker
+        Parser            cri-containerd
         Refresh_Interval  5
         Mem_Buf_Limit     12MB
         Skip_Long_Lines   On
@@ -80,14 +79,14 @@ config:
         Name              tail
         Tag               nginx-ingress.*
         Path              /var/log/containers/*nx-*.log
-        Parser            generic-json
+        Parser            cri-containerd
         Refresh_Interval  5
         Mem_Buf_Limit     5MB
     [INPUT]
         Name              tail
         Tag               cp-ingress-modsec.*
         Path              /var/log/containers/*nx-*.log
-        Parser            generic-json
+        Parser            cri-containerd
         Refresh_Interval  5
         Mem_Buf_Limit     5MB
     [INPUT]
@@ -101,7 +100,7 @@ config:
         Name              tail
         Tag               kube-apiserver-audit.*
         Path              /var/log/kube-apiserver-audit.log
-        Parser            docker
+        Parser            cri-containerd
         Refresh_Interval  5
         Mem_Buf_Limit     5MB
         Buffer_Max_Size   5MB
@@ -204,7 +203,7 @@ config:
         Generate_ID     On
         Retry_Limit     False
     [OUTPUT]
-        Name            es
+        Name            opensearch
         Match           cp-ingress-modsec.*
         Host            ${elasticsearch_modsec_audit_host}
         Port            443
@@ -241,17 +240,11 @@ config:
         Time_Key     time
         Time_Format  %Y-%m-%dT%H:%M:%S.%L
         Time_Keep    On
+    # CRI-containerd Parser
     [PARSER]
-        Name        docker
-        Format      json
-        Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L
-        Time_Keep   Off
-    # CRI Parser
-    [PARSER]
-        # http://rubular.com/r/tjUt3Awgg4
-        Name cri
+        # https://rubular.com/r/DjPmoX5HnQMesk
+        Name cri-containerd
         Format regex
-        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L%z
