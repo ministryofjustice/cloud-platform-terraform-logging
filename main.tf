@@ -51,7 +51,7 @@ resource "helm_release" "fluent_bit" {
   chart      = "fluent-bit"
   repository = "https://fluent.github.io/helm-charts"
   namespace  = kubernetes_namespace.logging.id
-  version    = "0.36.0"
+  version    = "0.37.0"
   timeout    = 1500
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
