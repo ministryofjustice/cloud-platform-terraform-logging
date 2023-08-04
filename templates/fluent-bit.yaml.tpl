@@ -57,7 +57,7 @@ config:
   service: |
     [SERVICE]
         Flush         1
-        Log_Level     info
+        Log_Level     debug
         Daemon        Off
         Parsers_File  parsers.conf
         Parsers_File  custom_parsers.conf
