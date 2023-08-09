@@ -94,7 +94,6 @@ config:
         Storage.type                      filesystem
         ## https://docs.fluentbit.io/manual/administration/backpressure#storage.max_chunks_up
         Storage.pause_on_chunks_overlimit True
-        Skip_Long_Lines   On
 
     [INPUT]
         Name                              tail
