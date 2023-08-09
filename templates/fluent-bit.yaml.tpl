@@ -2,15 +2,6 @@
 image:
   repository: fluent/fluent-bit
   pullPolicy: Always
-
-resources:
-   limits:
-     cpu: 2500m
-     memory: 2500Mi
-   requests:
-     cpu: 600m
-     memory: 900Mi
-
 serviceMonitor:
   enabled: true
   interval: 10s
