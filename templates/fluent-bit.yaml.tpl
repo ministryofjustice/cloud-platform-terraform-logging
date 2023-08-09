@@ -78,7 +78,6 @@ config:
 
     [INPUT]
         Name                              tail
-        Alias                             user_app_data
         Tag                               kubernetes.*
         Path                              /var/log/containers/*.log
         Exclude_Path                      *nx-*.log,eventrouter-*.log
@@ -94,11 +93,9 @@ config:
         Storage.type                      filesystem
         ## https://docs.fluentbit.io/manual/administration/backpressure#storage.max_chunks_up
         Storage.pause_on_chunks_overlimit True
-        Skip_Long_Lines   On
 
     [INPUT]
         Name                              tail
-        Alias                             default_nginx_ingress
         Tag                               nginx-ingress.*
         Path                              /var/log/containers/*nx-*.log
         Parser                            cri-containerd
@@ -113,7 +110,6 @@ config:
 
     [INPUT]
         Name                              tail
-        Alias                             modsec_nginx_ingress
         Tag                               cp-ingress-modsec.*
         Path                              /var/log/containers/*nx-*.log
         Parser                            cri-containerd
@@ -128,7 +124,6 @@ config:
 
     [INPUT]
         Name                              tail
-        Alias                             eventrouter
         Tag                               eventrouter.*
         Path                              /var/log/containers/eventrouter-*.log
         Parser                            generic-json
@@ -141,7 +136,6 @@ config:
 
     [INPUT]
         Name                              tail
-        Alias                             kube_apiserver_audit
         Tag                               kube-apiserver-audit.*
         Path                              /var/log/kube-apiserver-audit.log
         Parser                            cri-containerd
@@ -156,7 +150,6 @@ config:
 
     [FILTER]
         Name                kubernetes
-        Alias               user_app_data
         Match               kubernetes.*
         Kube_Tag_Prefix     kubernetes.var.log.containers.
         Kube_URL            https://kubernetes.default.svc:443
@@ -169,7 +162,6 @@ config:
 
     [FILTER]
         Name                kubernetes
-        Alias               eventrouter
         Match               eventrouter.*
         Kube_Tag_Prefix     eventrouter.var.log.containers.
         Kube_URL            https://kubernetes.default.svc:443
@@ -188,7 +180,6 @@ config:
         Exclude             log /.*ModSecurity-nginx.*/
     [FILTER]
         Name                kubernetes
-        Alias               default_nginx_ingress
         Match               nginx-ingress.*
         Kube_Tag_Prefix     nginx-ingress.var.log.containers.
         Kube_URL            https://kubernetes.default.svc:443
@@ -207,7 +198,6 @@ config:
         regex               log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
     [FILTER]
         Name                kubernetes
-        Alias               modsec_nginx_ingress
         Match               cp-ingress-modsec.*
         Kube_Tag_Prefix     cp-ingress-modsec.var.log.containers.
         Kube_URL            https://kubernetes.default.svc:443
@@ -227,7 +217,6 @@ config:
 
     [OUTPUT]
         Name                      es
-        Alias                     user_app_data
         Match                     kubernetes.*
         Host                      search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com
         Port                      443
@@ -244,7 +233,6 @@ config:
 
     [OUTPUT]
         Name                      es
-        Alias                     default_nginx_ingress
         Match                     nginx-ingress.*
         Host                      search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com
         Port                      443
@@ -260,7 +248,6 @@ config:
 
     [OUTPUT]
         Name                      opensearch
-        Alias                     modsec_nginx_ingress
         Match                     cp-ingress-modsec.*
         Host                      search-cp-live-modsec-audit-nuhzlrjwxrmdd6op3mvj2k5mye.eu-west-2.es.amazonaws.com
         Port                      443
@@ -278,7 +265,6 @@ config:
         Buffer_Size               False
     [OUTPUT]
         Name                      es
-        Alias                     eventrouter
         Match                     eventrouter.*
         Host                      search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com
         Port                      443
