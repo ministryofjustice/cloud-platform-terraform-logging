@@ -32,7 +32,7 @@ spec:
       annotations:
         message: A Fluentbit pod is CrashLoopBackOff'ing
     - alert: FluentbitIsOOMKilled
-      expr: sum_over_time(kube_pod_container_status_last_terminated_reason{namespace='logging', container="fluent-bit" reason="OOMKilled"}[15m]) > 1
+      expr: sum_over_time(kube_pod_container_status_last_terminated_reason{namespace='logging', container="fluent-bit", reason="OOMKilled"}[15m]) > 1
       for: 15m
       labels:
         severity: warning
