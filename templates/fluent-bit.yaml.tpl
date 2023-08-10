@@ -58,13 +58,14 @@ config:
         Flush                             1
         Log_Level                         debug
         Daemon                            Off
+        Grace                             30
         Parsers_File                      parsers.conf
         Parsers_File                      custom_parsers.conf
         HTTP_Server                       On
         HTTP_Listen                       0.0.0.0
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
-        Storage.max_chunks_up             500
+        Storage.max_chunks_up             128
         Storage.backlog.mem_limit         100MB
 
   inputs: |
@@ -75,6 +76,7 @@ config:
         Path                              /var/log/containers/*.log
         Exclude_Path                      *nx-*.log,eventrouter-*.log
         Parser                            cri-containerd
+        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Skip_Long_Lines                   On
         Buffer_Max_Size                   5MB
@@ -93,6 +95,7 @@ config:
         Tag                               nginx-ingress.*
         Path                              /var/log/containers/*nx-*.log
         Parser                            cri-containerd
+        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
@@ -108,6 +111,7 @@ config:
         Tag                               cp-ingress-modsec.*
         Path                              /var/log/containers/*nx-*.log
         Parser                            cri-containerd
+        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
@@ -123,6 +127,7 @@ config:
         Tag                               eventrouter.*
         Path                              /var/log/containers/eventrouter-*.log
         Parser                            generic-json
+        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Offset_Key                        pause_position_eventrouter
         DB                                eventrouter.db
@@ -136,6 +141,7 @@ config:
         Tag                               kube-apiserver-audit.*
         Path                              /var/log/kube-apiserver-audit.log
         Parser                            cri-containerd
+        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
