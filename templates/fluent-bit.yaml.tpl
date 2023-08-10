@@ -91,11 +91,10 @@ config:
 
     [INPUT]
         Name                              tail
-        Alias                             deault_nginx_ingress
+        Alias                             default_nginx_ingress
         Tag                               nginx-ingress.*
         Path                              /var/log/containers/*nx-*.log
         Parser                            cri-containerd
-        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
@@ -111,7 +110,6 @@ config:
         Tag                               cp-ingress-modsec.*
         Path                              /var/log/containers/*nx-*.log
         Parser                            cri-containerd
-        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
@@ -127,7 +125,6 @@ config:
         Tag                               eventrouter.*
         Path                              /var/log/containers/eventrouter-*.log
         Parser                            generic-json
-        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Offset_Key                        pause_position_eventrouter
         DB                                eventrouter.db
@@ -141,7 +138,6 @@ config:
         Tag                               kube-apiserver-audit.*
         Path                              /var/log/kube-apiserver-audit.log
         Parser                            cri-containerd
-        Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
