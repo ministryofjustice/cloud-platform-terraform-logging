@@ -144,7 +144,7 @@ resource "kubernetes_limit_range" "default" {
       }
       default_request = {
         cpu    = "100m"
-        memory = "3900Mi"
+        memory = "300Mi"
       }
     }
   }
