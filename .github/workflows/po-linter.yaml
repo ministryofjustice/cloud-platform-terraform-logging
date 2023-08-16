@@ -1,0 +1,24 @@
+name: Prometheus Operator Linter
+
+on:
+  pull_request:
+    paths:
+    - resources/prometheusrule-alerts/*
+  workflow_dispatch:
+
+jobs:
+  po-lint:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Prometheus Operator Linter
+        uses: prymitive/pint-action@v1
+        with:
+          token: ${{ github.token }}
