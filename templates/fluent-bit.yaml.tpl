@@ -56,7 +56,7 @@ config:
   service: |
     [SERVICE]
         Flush                             1
-        Log_Level                         debug
+        Log_Level                         info
         Daemon                            Off
         Grace                             30
         Parsers_File                      parsers.conf
