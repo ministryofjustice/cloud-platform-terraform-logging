@@ -224,11 +224,11 @@ config:
         Name                      es
         Alias                     user_app_data
         Match                     kubernetes.*
-        Host                      search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com
+        Host                      ${elasticsearch_host}
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Logstash_Prefix           live_kubernetes_cluster
+        Logstash_Prefix           ${cluster}_kubernetes_cluster
         tls                       On
         Logstash_Format           On
         Replace_Dots              On
@@ -241,11 +241,11 @@ config:
         Name                      es
         Alias                     default_nginx_ingress
         Match                     nginx-ingress.*
-        Host                      search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com
+        Host                      ${elasticsearch_host}
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Logstash_Prefix           live_kubernetes_ingress
+        Logstash_Prefix           ${cluster}_kubernetes_ingress
         tls                       On
         Logstash_Format           On
         Replace_Dots              On
@@ -257,11 +257,11 @@ config:
         Name                      opensearch
         Alias                     modsec_nginx_ingress
         Match                     cp-ingress-modsec.*
-        Host                      search-cp-live-modsec-audit-nuhzlrjwxrmdd6op3mvj2k5mye.eu-west-2.es.amazonaws.com
+        Host                      ${elasticsearch_modsec_audit_host}
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Logstash_Prefix           live_k8s_modsec_ingress
+        Logstash_Prefix           ${cluster}_k8s_modsec_ingress
         tls                       On
         Logstash_Format           On
         Replace_Dots              On
@@ -276,11 +276,11 @@ config:
         Name                      es
         Alias                     eventrouter
         Match                     eventrouter.*
-        Host                      search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com
+        Host                      ${elasticsearch_host}
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Logstash_Prefix           live_eventrouter
+        Logstash_Prefix           ${cluster}_eventrouter
         tls                       On
         Logstash_Format           On
         Replace_Dots              On
