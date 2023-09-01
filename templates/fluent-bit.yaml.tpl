@@ -93,7 +93,7 @@ config:
         Name                              tail
         Alias                             default_nginx_ingress
         Tag                               nginx-ingress.*
-        Path                              /var/log/containers/*nx-*.log
+        Path                              /var/log/containers/nginx-ingress-default-*.log
         Parser                            cri-containerd
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
@@ -104,11 +104,11 @@ config:
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
 
-    [INPUT]
+    [INPUT] ## modsec audit logs are shipped from a fluent bit side car this input captures access and error logs
         Name                              tail
         Alias                             modsec_nginx_ingress
         Tag                               cp-ingress-modsec.*
-        Path                              /var/log/containers/*nx-*.log
+        Path                              /var/log/containers/nginx-ingress-modsec-controller-*_ingress-controllers_controller-*.log ## eg. name=/var/log/containers/nginx-ingress-modsec-controller-6f5d5fb4d8-lczc4_ingress-controllers_controller-ce4372e295059e3dbfdf0511bef40cc389357d649658b0c98e528fbebac1e635.log
         Parser                            cri-containerd
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
@@ -194,7 +194,6 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
-    ## Include only Modsecurity audit logs
     [FILTER]
         Name                grep
         Match               cp-ingress-modsec.*
