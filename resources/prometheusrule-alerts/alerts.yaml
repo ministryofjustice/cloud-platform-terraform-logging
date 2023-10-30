@@ -32,17 +32,14 @@ spec:
       annotations:
         message: A Fluentbit pod is CrashLoopBackOff'ing
     - alert: FluentbitIsOOMKilled
-      expr: sum_over_time(kube_pod_container_status_last_terminated_reason{namespace='logging', container="fluent-bit", reason="OOMKilled"}[15m]) > 1
+      expr: |-
+        kube_pod_container_status_last_terminated_reason{container="fluent-bit",namespace="logging",reason="OOMKilled"} == 1 
+        and on(container, namespace, pod) increase(kube_pod_container_status_restarts_total{container="fluent-bit",namespace="logging"}[5m]) > 0
       for: 15m
       labels:
         severity: warning
       annotations:
         message: |
-          A Fluentbit pod is OOMKilled. This alert works by watching for:
+          A Fluentbit pod has restarted because of OOMKilled. This alert works by watching for a pod that has been restarted within 5 minutes and the last termination status is OOMKilled.
 
-          ```
-          Last State: Terminated
-            Reason:       OOMKilled
-          ```
-
-          When you've fixed the issue, be sure to delete the pod manually to reset the last state and correctly resolve the alarm
+          
