@@ -60,6 +60,7 @@ No modules.
 | <a name="input_elasticsearch_host"></a> [elasticsearch\_host](#input\_elasticsearch\_host) | The elasticsearch host where logs are going to be shipped | `any` | n/a | yes |
 | <a name="input_elasticsearch_modsec_audit_host"></a> [elasticsearch\_modsec\_audit\_host](#input\_elasticsearch\_modsec\_audit\_host) | The elasticsearch host where modsec audit logs are going to be shipped | `any` | n/a | yes |
 | <a name="input_enable_fluent_bit"></a> [enable\_fluent\_bit](#input\_enable\_fluent\_bit) | Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use | `bool` | `true` | no |
+| <a name="input_opensearch_app_host"></a> [opensearch\_app\_host](#input\_opensearch\_app\_host) | The opensearch host where user app logs are going to be shipped | `any` | n/a | yes |
 
 ## Outputs
 
