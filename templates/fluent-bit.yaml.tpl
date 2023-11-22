@@ -254,6 +254,22 @@ config:
         Buffer_Size               False
 
     [OUTPUT]
+        Name                      es
+        Alias                     eventrouter
+        Match                     eventrouter.*
+        Host                      ${elasticsearch_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_eventrouter
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        Buffer_Size               False
+
+    [OUTPUT]
         Name                      opensearch
         Alias                     modsec_nginx_ingress
         Match                     cp-ingress-modsec.*
@@ -273,10 +289,48 @@ config:
         Buffer_Size               False
 
     [OUTPUT]
-        Name                      es
-        Alias                     eventrouter
+        Name                      opensearch
+        Alias                     user_app_data_os
+        Match                     kubernetes.*
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_kubernetes_cluster
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     default_nginx_ingress_os
+        Match                     nginx-ingress.*
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_kubernetes_ingress
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     eventrouter_os
         Match                     eventrouter.*
-        Host                      ${elasticsearch_host}
+        Host                      ${opensearch_app_host}
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
@@ -286,7 +340,11 @@ config:
         Replace_Dots              On
         Generate_ID               On
         Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
         Buffer_Size               False
+
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
