@@ -6,6 +6,10 @@ variable "elasticsearch_host" {
   description = "The elasticsearch host where logs are going to be shipped"
 }
 
+variable "opensearch_app_host" {
+  description = "The opensearch host where user app logs are going to be shipped"
+}
+
 variable "elasticsearch_modsec_audit_host" {
   description = "The elasticsearch host where modsec audit logs are going to be shipped"
 }
