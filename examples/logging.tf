@@ -6,6 +6,7 @@
 module "logging" {
   source = "../"
 
+  opensearch_app_host             = "placeholder"
   elasticsearch_host              = "placeholder-elasticsearch"
   elasticsearch_modsec_audit_host = ""
 
