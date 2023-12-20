@@ -65,8 +65,8 @@ config:
         HTTP_Listen                       0.0.0.0
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
-        Storage.max_chunks_up             64
-        Storage.backlog.mem_limit         5MB
+        Storage.max_chunks_up             64 # maximum number of Chunks that can be up in memory. This helps to control memory usage.
+        Storage.backlog.mem_limit         100MB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
 
   inputs: |
     [INPUT]
@@ -79,7 +79,7 @@ config:
         Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Skip_Long_Lines                   On
-        Buffer_Max_Size                   5MB
+        Buffer_Max_Size                   5MB # limit of the buffer size per monitored file. When a buffer needs to be increased (e.g: very long lines), this value is used to restrict how much the memory buffer can grow. If reading a file exceeds this limit, the file is removed from the monitored file list.
         Buffer_Chunk_Size                 1M
         Offset_Key                        pause_position_kubernetes
         DB                                kubernetes.db
@@ -100,21 +100,6 @@ config:
         Buffer_Chunk_Size                 1M
         Offset_Key                        pause_position_nginx_ingress
         DB                                nginx-ingress.db
-        DB.locking                        true
-        Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
-
-    [INPUT]
-        Name                              tail
-        Alias                             modsec_nginx_ingress
-        Tag                               cp-ingress-modsec.*
-        Path                              /var/log/containers/*nx-*.log
-        Parser                            cri-containerd
-        Refresh_Interval                  5
-        Buffer_Max_Size                   5MB
-        Buffer_Chunk_Size                 1M
-        Offset_Key                        pause_position_modsec
-        DB                                cp-ingress-modsec.db
         DB.locking                        true
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
@@ -194,30 +179,6 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
-    ## Include only Modsecurity audit logs
-    [FILTER]
-        Name                grep
-        Match               cp-ingress-modsec.*
-        regex               log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
-    [FILTER]
-        Name                kubernetes
-        Alias               modsec_nginx_ingress
-        Match               cp-ingress-modsec.*
-        Kube_Tag_Prefix     cp-ingress-modsec.var.log.containers.
-        Kube_URL            https://kubernetes.default.svc:443
-        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
-        K8S-Logging.Parser  On
-        K8S-Logging.Exclude On
-        Keep_Log            On
-        Merge_Log           On
-        Merge_Log_Key       log_processed
-        Buffer_Size         1MB
-    [FILTER]
-        Name                lua
-        Match               cp-ingress-modsec.*
-        script              /fluent-bit/scripts/cb_extract_tag_value.lua
-        call                cb_extract_tag_value
 
   outputs: |
     [OUTPUT]
@@ -267,25 +228,6 @@ config:
         Replace_Dots              On
         Generate_ID               On
         Retry_Limit               False
-        Buffer_Size               False
-
-    [OUTPUT]
-        Name                      opensearch
-        Alias                     modsec_nginx_ingress
-        Match                     cp-ingress-modsec.*
-        Host                      ${elasticsearch_modsec_audit_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_k8s_modsec_ingress
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
         Buffer_Size               False
 
     [OUTPUT]
