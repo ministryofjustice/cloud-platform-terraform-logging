@@ -8,7 +8,6 @@ module "logging" {
 
   opensearch_app_host             = "placeholder"
   elasticsearch_host              = "placeholder-elasticsearch"
-  elasticsearch_modsec_audit_host = ""
 
   dependence_prometheus = "status"
   enable_fluent_bit     = false
