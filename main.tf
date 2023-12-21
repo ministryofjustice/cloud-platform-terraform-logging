@@ -61,9 +61,6 @@ resource "helm_release" "fluent_bit" {
     cluster                         = terraform.workspace
   })]
 
-  depends_on = [
-    var.dependence_prometheus
-  ]
 }
 
 
