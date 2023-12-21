@@ -33,7 +33,7 @@ config:
         HTTP_Listen                       0.0.0.0
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
-        Storage.max_chunks_up             64 # maximum number of Chunks that can be up in memory. This helps to control memory usage.
+        Storage.max_chunks_up             128 # maximum number of Chunks that can be up in memory. This helps to control memory usage.
         Storage.backlog.mem_limit         100MB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
 
   inputs: |
@@ -201,31 +201,12 @@ config:
     [OUTPUT]
         Name                      opensearch
         Alias                     user_app_data_os
-        Match                     kubernetes.*
+        Match_Regex               kubernetes.*|nginx-ingress.*
         Host                      ${opensearch_app_host}
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
         Logstash_Prefix           ${cluster}_kubernetes_cluster
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
-
-    [OUTPUT]
-        Name                      opensearch
-        Alias                     default_nginx_ingress_os
-        Match                     nginx-ingress.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_kubernetes_ingress
         tls                       On
         Logstash_Format           On
         Replace_Dots              On
