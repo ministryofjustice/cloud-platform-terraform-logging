@@ -58,7 +58,6 @@ resource "helm_release" "fluent_bit" {
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
     opensearch_app_host             = var.opensearch_app_host
     elasticsearch_host              = var.elasticsearch_host
-    elasticsearch_modsec_audit_host = var.elasticsearch_modsec_audit_host
     cluster                         = terraform.workspace
   })]
 
