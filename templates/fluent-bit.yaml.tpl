@@ -100,6 +100,13 @@ config:
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
 
+    [INPUT]
+        name            fluentbit_metrics
+        tag             internal_metrics
+        scrape_interval 2
+
+
+
   filters: |
     [FILTER]
         Name                kubernetes
@@ -255,6 +262,12 @@ config:
         Suppress_Type_Name        On
         Buffer_Size               False
 
+    [OUTPUT]
+        name            prometheus_exporter
+        match           internal_metrics
+        host            0.0.0.0
+        port            2021
+        add_label       logs user_application
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
