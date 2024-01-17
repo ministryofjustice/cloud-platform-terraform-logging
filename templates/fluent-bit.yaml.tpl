@@ -19,6 +19,11 @@ tolerations:
     value: "true"
     effect: "NoSchedule" 
 
+securityContext:
+  capabilities:
+    drop:
+      - NET_RAW
+
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
