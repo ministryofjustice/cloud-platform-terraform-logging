@@ -41,7 +41,6 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_dependence_prometheus"></a> [dependence\_prometheus](#input\_dependence\_prometheus) | Prometheus module dependence - it is required in order to use this module. | `any` | n/a | yes |
 | <a name="input_elasticsearch_host"></a> [elasticsearch\_host](#input\_elasticsearch\_host) | The elasticsearch host where logs are going to be shipped | `any` | n/a | yes |
 | <a name="input_enable_fluent_bit"></a> [enable\_fluent\_bit](#input\_enable\_fluent\_bit) | Enable or not fluent-bit Helm Chart - change the default to true once it is ready to use | `bool` | `true` | no |
 | <a name="input_opensearch_app_host"></a> [opensearch\_app\_host](#input\_opensearch\_app\_host) | The opensearch host where user app logs are going to be shipped | `any` | n/a | yes |

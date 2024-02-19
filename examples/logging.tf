@@ -9,6 +9,5 @@ module "logging" {
   opensearch_app_host             = "placeholder"
   elasticsearch_host              = "placeholder-elasticsearch"
 
-  dependence_prometheus = "status"
   enable_fluent_bit     = false
 }
