@@ -56,9 +56,9 @@ resource "helm_release" "fluent_bit" {
   timeout    = 1500
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
-    opensearch_app_host             = var.opensearch_app_host
-    elasticsearch_host              = var.elasticsearch_host
-    cluster                         = terraform.workspace
+    opensearch_app_host = var.opensearch_app_host
+    elasticsearch_host  = var.elasticsearch_host
+    cluster             = terraform.workspace
   })]
 
 }
