@@ -1,4 +1,3 @@
-
 image:
   repository: fluent/fluent-bit
   pullPolicy: Always
@@ -6,6 +5,10 @@ serviceMonitor:
   enabled: true
   interval: 10s
   scrapeTimeout: 10s
+
+serviceAccount:
+  create: false
+  name: fluent-bit-cp-managed
 
 tolerations:
   - key: node-role.kubernetes.io/master
@@ -17,7 +20,7 @@ tolerations:
   - key: "ingress-node"
     operator: "Equal"
     value: "true"
-    effect: "NoSchedule" 
+    effect: "NoSchedule"
 
 securityContext:
   capabilities:
@@ -78,15 +81,10 @@ config:
         Storage.pause_on_chunks_overlimit True
 
     [INPUT]
-        Name                              tail
+        Name                              kubernetes_events
         Alias                             eventrouter
         Tag                               eventrouter.*
-        Path                              /var/log/containers/eventrouter-*.log
-        Parser                            generic-json
-        Refresh_Interval                  5
-        Offset_Key                        pause_position_eventrouter
         DB                                eventrouter.db
-        DB.locking                        true
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
 
