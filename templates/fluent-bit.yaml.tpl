@@ -117,20 +117,6 @@ config:
         Merge_Log           Off
         Buffer_Size         1MB
 
-    [FILTER]
-        Name                kubernetes
-        Alias               eventrouter
-        Match               eventrouter.*
-        Kube_Tag_Prefix     eventrouter.var.log.containers.
-        Kube_URL            https://kubernetes.default.svc:443
-        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
-        K8S-Logging.Parser  On
-        K8S-Logging.Exclude On
-        Merge_Log           On
-        Merge_Log_Key       log_processed
-        Buffer_Size         1MB
-
     ## Redaction of fields
     [FILTER]
         Name                grep
