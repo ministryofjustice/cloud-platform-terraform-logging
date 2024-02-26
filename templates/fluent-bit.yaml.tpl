@@ -85,8 +85,13 @@ config:
         Alias                             eventrouter
         Tag                               eventrouter.*
         DB                                eventrouter.db
+        # ask k8s API for updates every x seconds
+        interval_sec                      60
+        # fetch at most x items per requests (pagination)
+        kube_request_limit                10
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
+
 
     [INPUT]
         Name                              tail
