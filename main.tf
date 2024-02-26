@@ -61,6 +61,7 @@ resource "helm_release" "fluent_bit" {
     cluster             = terraform.workspace
   })]
 
+  depends_on = [kubernetes_service_account.this]
 }
 
 

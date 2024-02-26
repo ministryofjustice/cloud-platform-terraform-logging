@@ -85,11 +85,13 @@ config:
         Alias                             eventrouter
         Tag                               eventrouter.*
         DB                                eventrouter.db
-        ## needed to limit the response from the kube apiserver and reduce the cpu overhead
+        # ask k8s API for updates every x seconds
         interval_sec                      60
-        kube_request_limit                250
+        # fetch at most x items per requests (pagination)
+        kube_request_limit                10
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
+
 
     [INPUT]
         Name                              tail
