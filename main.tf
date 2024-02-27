@@ -25,23 +25,6 @@ resource "kubernetes_namespace" "logging" {
 }
 
 ###############
-# EventRouter #
-###############
-
-resource "helm_release" "eventrouter" {
-  name       = "eventrouter"
-  repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
-  chart      = "eventrouter"
-  namespace  = kubernetes_namespace.logging.id
-  version    = "0.3.4"
-
-  set {
-    name  = "sink"
-    value = "stdout"
-  }
-}
-
-###############
 # fluent-bit #
 ###############
 
