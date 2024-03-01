@@ -23,6 +23,8 @@ resource "kubernetes_service_account" "this" {
     name      = local.sa_name
     namespace = local.namespace
   }
+
+  depends_on = [kubernetes_namespace.logging]
 }
 
 resource "kubernetes_cluster_role" "this" {
