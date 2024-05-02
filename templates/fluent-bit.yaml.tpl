@@ -27,6 +27,29 @@ securityContext:
     drop:
       - NET_RAW
 
+luaScripts:
+  cb_extract_team_values.lua: |
+    function cb_extract_team_values(tag, timestamp, record)
+      if record["kubernetes"]["labels"]["github_teams"] == nil or record["kubernetes"]["labels"]["github_teams"] == '' then
+        record["kubernetes"]["labels"]["github_teams"] = "all-org-members"
+      end
+      local github_team = string.gmatch(record["kubernetes"]["labels"]["github_teams"], "[^_]+")
+
+      local new_record = record
+      local team_matches = {}
+
+      for team in github_team do
+        table.insert(team_matches, team)
+      end
+
+      if #team_matches > 0 then
+        new_record["github_teams"] = team_matches
+        return 1, timestamp, new_record
+      else
+        return 0, timestamp, record
+      end
+    end
+
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
@@ -92,7 +115,6 @@ config:
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
 
-
     [INPUT]
         Name                              tail
         Alias                             kube_apiserver_audit
@@ -121,6 +143,12 @@ config:
         K8S-Logging.Exclude On
         Merge_Log           Off
         Buffer_Size         1MB
+    [FILTER]
+        Name lua
+        Alias user_app_data_os
+        Match kubernetes.*
+        script  /fluent-bit/scripts/cb_extract_team_values.lua
+        call cb_extract_team_values
 
     ## Redaction of fields
     [FILTER]
@@ -141,6 +169,7 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
+
 
   outputs: |
     [OUTPUT]
@@ -248,7 +277,6 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
-
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
