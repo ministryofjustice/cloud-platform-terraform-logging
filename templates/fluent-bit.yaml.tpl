@@ -173,55 +173,6 @@ config:
 
   outputs: |
     [OUTPUT]
-        Name                      es
-        Alias                     user_app_data
-        Match                     kubernetes.*
-        Host                      ${elasticsearch_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_kubernetes_cluster
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        ## Specify the buffer size used to read the response from the Elasticsearch HTTP service
-        Buffer_Size               False
-
-    [OUTPUT]
-        Name                      es
-        Alias                     default_nginx_ingress
-        Match                     nginx-ingress.*
-        Host                      ${elasticsearch_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_kubernetes_ingress
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        Buffer_Size               False
-
-    [OUTPUT]
-        Name                      es
-        Alias                     eventrouter
-        Match                     eventrouter.*
-        Host                      ${elasticsearch_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_eventrouter
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        Buffer_Size               False
-
-    [OUTPUT]
         Name                      opensearch
         Alias                     user_app_data_os
         Match                     kubernetes.*
