@@ -135,8 +135,8 @@ resource "kubernetes_limit_range" "default" {
 #########################
 # prometheus rule alert #
 #########################
-resource "kubectl_manifest" "prometheus_rule_alert" {
-  depends_on = [helm_release.fluent_bit]
-  yaml_body  = file("${path.module}/resources/prometheusrule-alerts/alerts.yaml")
-}
+# resource "kubectl_manifest" "prometheus_rule_alert" {
+#   depends_on = [helm_release.fluent_bit]
+#   yaml_body  = file("${path.module}/resources/prometheusrule-alerts/alerts.yaml")
+# }
 
