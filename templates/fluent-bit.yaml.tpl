@@ -30,10 +30,10 @@ securityContext:
 luaScripts:
   cb_extract_team_values.lua: |
     function cb_extract_team_values(tag, timestamp, record)
-      if record["kubernetes"]["labels"]["github_teams"] == nil or record["kubernetes"]["labels"]["github_teams"] == '' then
-        record["kubernetes"]["labels"]["github_teams"] = "all-org-members"
+      if record["kubernetes"]["annotations"]["github_teams"] == nil or record["kubernetes"]["annotations"]["github_teams"] == '' then
+        record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
       end
-      local github_team = string.gmatch(record["kubernetes"]["labels"]["github_teams"], "[^_]+")
+      local github_team = string.gmatch(record["kubernetes"]["annotations"]["github_teams"], "[^_]+")
 
       local new_record = record
       local team_matches = {}
