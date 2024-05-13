@@ -120,12 +120,6 @@ config:
         K8S-Logging.Exclude On
         Merge_Log           Off
         Buffer_Size         1MB
-    [FILTER]
-        Name lua
-        Alias user_app_data_os
-        Match kubernetes.*
-        script  /fluent-bit/scripts/cb_extract_team_values.lua
-        call cb_extract_team_values
 
     ## Redaction of fields
     [FILTER]
