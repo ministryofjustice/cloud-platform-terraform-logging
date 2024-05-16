@@ -32,15 +32,15 @@ luaScripts:
     function cb_extract_team_values(tag, timestamp, record)
       local new_record = record
 
-      if record["kubernetes"]["annotations"] ~= nil then
+      if record["kubernetes"]["annotations"] == nil then
         new_record["kubernetes"]["annotations"] = {}
         new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
 
         return 1, timestamp, new_record
       end
 
-      if record["kubernetes"]["annotations"]["github_teams"] ~= nil or record["kubernetes"]["annotations"]["github_teams"] == '' then
-        record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
+      if record["kubernetes"]["annotations"]["github_teams"] == nil or record["kubernetes"]["annotations"]["github_teams"] == '' then
+        new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
 
         return 1, timestamp, new_record
       end
