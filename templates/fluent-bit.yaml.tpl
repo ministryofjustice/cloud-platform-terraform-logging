@@ -35,12 +35,14 @@ luaScripts:
       if record["kubernetes"]["annotations"] == nil then
         new_record["kubernetes"]["annotations"] = {}
         new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
+        new_record["github_teams"] = "all-org-members"
 
         return 1, timestamp, new_record
       end
 
       if record["kubernetes"]["annotations"]["github_teams"] == nil or record["kubernetes"]["annotations"]["github_teams"] == '' then
         new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
+        new_record["github_teams"] = "all-org-members"
 
         return 1, timestamp, new_record
       end
