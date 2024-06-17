@@ -2,7 +2,7 @@
 
 Terraform module that deploys cloud-platform logging solution. It includes components like: fluent-bit, eventrouter etc.
 
-<!--- BEGIN_TF_DOCS --->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -50,8 +50,7 @@ No modules.
 ## Outputs
 
 No outputs.
-
-<!--- END_TF_DOCS --->
+<!-- END_TF_DOCS -->
 
 Reference:
 https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit
