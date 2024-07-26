@@ -27,42 +27,6 @@ securityContext:
     drop:
       - NET_RAW
 
-luaScripts:
-  cb_extract_team_values.lua: |
-    function cb_extract_team_values(tag, timestamp, record)
-      local new_record = record
-
-      if record["kubernetes"]["annotations"] == nil then
-        new_record["kubernetes"]["annotations"] = {}
-        new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
-        new_record["github_teams"] = "all-org-members"
-
-        return 1, timestamp, new_record
-      end
-
-      if record["kubernetes"]["annotations"]["github_teams"] == nil or record["kubernetes"]["annotations"]["github_teams"] == '' then
-        new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
-        new_record["github_teams"] = "all-org-members"
-
-        return 1, timestamp, new_record
-      end
-
-      local github_team = string.gmatch(record["kubernetes"]["annotations"]["github_teams"], "[^_]+")
-
-      local team_matches = {}
-
-      for team in github_team do
-        table.insert(team_matches, team)
-      end
-
-      if #team_matches > 0 then
-        new_record["github_teams"] = team_matches
-        return 1, timestamp, new_record
-      else
-        return 0, timestamp, record
-      end
-    end
-
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
@@ -157,13 +121,6 @@ config:
         Merge_Log           Off
         Buffer_Size         1MB
 
-    [FILTER]
-        Name lua
-        Alias user_app_data_os
-        Match kubernetes.*
-        script  /fluent-bit/scripts/cb_extract_team_values.lua
-        call cb_extract_team_values
-
     ## Redaction of fields
     [FILTER]
         Name                grep
@@ -235,62 +192,6 @@ config:
         Retry_Limit               False
         Buffer_Size               False
 
-    [OUTPUT]
-        Name                      opensearch
-        Alias                     user_app_data_os
-        Match                     kubernetes.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_kubernetes_cluster
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
-
-    [OUTPUT]
-        Name                      opensearch
-        Alias                     default_nginx_ingress_os
-        Match                     nginx-ingress.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_kubernetes_ingress
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
-
-    [OUTPUT]
-        Name                      opensearch
-        Alias                     eventrouter_os
-        Match                     eventrouter.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_eventrouter
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
