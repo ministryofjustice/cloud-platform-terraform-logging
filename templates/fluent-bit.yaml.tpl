@@ -27,6 +27,42 @@ securityContext:
     drop:
       - NET_RAW
 
+luaScripts:
+  cb_extract_team_values.lua: |
+    function cb_extract_team_values(tag, timestamp, record)
+      local new_record = record
+
+      if record["kubernetes"]["annotations"] == nil then
+        new_record["kubernetes"]["annotations"] = {}
+        new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
+        new_record["github_teams"] = "all-org-members"
+
+        return 1, timestamp, new_record
+      end
+
+      if record["kubernetes"]["annotations"]["github_teams"] == nil or record["kubernetes"]["annotations"]["github_teams"] == '' then
+        new_record["kubernetes"]["annotations"]["github_teams"] = "all-org-members"
+        new_record["github_teams"] = "all-org-members"
+
+        return 1, timestamp, new_record
+      end
+
+      local github_team = string.gmatch(record["kubernetes"]["annotations"]["github_teams"], "[^_]+")
+
+      local team_matches = {}
+
+      for team in github_team do
+        table.insert(team_matches, team)
+      end
+
+      if #team_matches > 0 then
+        new_record["github_teams"] = team_matches
+        return 1, timestamp, new_record
+      else
+        return 0, timestamp, record
+      end
+    end
+
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
   service: |
