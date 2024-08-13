@@ -157,6 +157,13 @@ config:
         Merge_Log           Off
         Buffer_Size         1MB
 
+    [FILTER]
+        Name lua
+        Alias user_app_data_os
+        Match kubernetes.*
+        script  /fluent-bit/scripts/cb_extract_team_values.lua
+        call cb_extract_team_values
+
     ## Redaction of fields
     [FILTER]
         Name                grep
@@ -228,6 +235,62 @@ config:
         Retry_Limit               False
         Buffer_Size               False
 
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     user_app_data_os
+        Match                     kubernetes.*
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_kubernetes_cluster
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     default_nginx_ingress_os
+        Match                     nginx-ingress.*
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_kubernetes_ingress
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     eventrouter_os
+        Match                     eventrouter.*
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_eventrouter
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
