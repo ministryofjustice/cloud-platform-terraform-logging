@@ -143,6 +143,21 @@ config:
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
 
+    [INPUT]
+        Name                              tail
+        Alias                             ipamd
+        Tag                               ipamd.*
+        Path                              /var/log/aws-routed-eni/ipamd.log
+        Parser                            cri-containerd
+        Refresh_Interval                  5
+        Buffer_Max_Size                   5MB
+        Buffer_Chunk_Size                 1M
+        Offset_Key                        pause_position_ipamd
+        DB                                ipamd.db
+        DB.locking                        true
+        Storage.type                      filesystem
+        Storage.pause_on_chunks_overlimit True          
+
   filters: |
     [FILTER]
         Name                kubernetes
@@ -291,6 +306,25 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     ipamd_os
+        Match                     ipamd.*
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_ipamd
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False        
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
