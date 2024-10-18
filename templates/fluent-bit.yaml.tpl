@@ -251,22 +251,6 @@ config:
         Buffer_Size               False
 
     [OUTPUT]
-        Name                      es
-        Alias                     ipamd
-        Match                     ipamd.*
-        Host                      ${elasticsearch_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_ipamd
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        Buffer_Size               False        
-
-    [OUTPUT]
         Name                      opensearch
         Alias                     user_app_data_os
         Match                     kubernetes.*
