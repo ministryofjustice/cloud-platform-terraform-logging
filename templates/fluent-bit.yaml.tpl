@@ -240,23 +240,29 @@ config:
         Buffer_Size               False
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     eventrouter_os
+        Name                      stdout
         Match                     eventrouter.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${cluster}_eventrouter
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Alias                     eventrouter_stdout
+
+#    [OUTPUT]
+#        Name                      opensearch
+#        Alias                     eventrouter_os
+#        Match                     eventrouter.*
+#        Host                      ${opensearch_app_host}
+#        Port                      443
+#        Type                      _doc
+#        Time_Key                  @timestamp
+#        Logstash_Prefix           ${cluster}_eventrouter
+#        tls                       On
+#        Logstash_Format           On
+#        Replace_Dots              On
+#        Generate_ID               On
+#        Retry_Limit               False
+#        AWS_AUTH                  On
+#        AWS_REGION                eu-west-2
+#        Suppress_Type_Name        On
+#        Buffer_Size               False
+
 
     [OUTPUT]
         Name                      opensearch
@@ -291,6 +297,13 @@ config:
         Name cri-containerd
         Format regex
         Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+    [PARSER]
+        # https://rubular.com/r/HSac4mikEZ3iF8
+        Name modsec-debug-logs
+        Format regex
+        Regex ^(?<debug_uid>\[\d+\.\d+\]) (?<uri>\[.*\]) (?<log>\[\d+\].*)$
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L%z
 
