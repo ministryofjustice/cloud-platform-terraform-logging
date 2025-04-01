@@ -240,9 +240,23 @@ config:
         Buffer_Size               False
 
     [OUTPUT]
-        Name                      stdout
+        Name                      opensearch
+        Alias                     eventrouter_os
         Match                     eventrouter.*
-        Alias                     eventrouter_stdout
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${cluster}_eventrouter
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
 
     [OUTPUT]
         Name                      opensearch
