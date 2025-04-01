@@ -265,7 +265,8 @@ config:
         Host                      ${opensearch_app_host}
         Port                      443
         Type                      _doc
-        Time_Key                  @timestamp
+        Time_Key                  time
+        Current_Time_index        On
         Logstash_Prefix           ${cluster}_ipamd
         tls                       On
         Logstash_Format           On
