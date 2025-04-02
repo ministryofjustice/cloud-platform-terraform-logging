@@ -209,7 +209,7 @@ config:
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Current_Time_index        On
+        Current_Time_Index        On
         Logstash_Prefix           ${cluster}_kubernetes_cluster
         tls                       On
         Logstash_Format           On
@@ -229,7 +229,7 @@ config:
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Current_Time_index        On
+        Current_Time_Index        On
         Logstash_Prefix           ${cluster}_kubernetes_ingress
         tls                       On
         Logstash_Format           On
@@ -249,7 +249,7 @@ config:
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Current_Time_index        On
+        Current_Time_Index        On
         Logstash_Prefix           ${cluster}_eventrouter
         tls                       On
         Logstash_Format           On
@@ -269,7 +269,7 @@ config:
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
-        Current_Time_index        On
+        Current_Time_Index        On
         Logstash_Prefix           ${cluster}_ipamd
         tls                       On
         Logstash_Format           On
