@@ -106,7 +106,8 @@ config:
         Alias                             default_nginx_ingress
         Tag                               nginx-ingress.*
         Path                              /var/log/containers/*nx-*.log
-        Parser                            generic-json, cri-containerd
+        Exclude_Path                      /var/log/containers/*nginx-ingress-modsec-*controller*_ingress-controllers_*.log
+        Parser                            cri-containerd
         Refresh_Interval                  5
         Skip_Long_Lines                   On
         Buffer_Max_Size                   5MB
@@ -199,7 +200,6 @@ config:
         Merge_Log           On
         Merge_Log_Key       log_processed
         Buffer_Size         1MB
-
 
   outputs: |
     [OUTPUT]
