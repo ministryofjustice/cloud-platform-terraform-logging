@@ -122,7 +122,6 @@ config:
         Alias                             eventrouter
         Tag                               eventrouter.*
         DB                                eventrouter.db
-        DB.locking                        true
         # ask k8s API for updates every x seconds
         interval_sec                      60
         # fetch at most x items per requests (pagination)
@@ -222,6 +221,7 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
+        Workers                   2
 
     [OUTPUT]
         Name                      opensearch
@@ -242,6 +242,7 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
+        Workers                   2
 
     [OUTPUT]
         Name                      opensearch
@@ -262,6 +263,7 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
+        Workers                   1
 
     [OUTPUT]
         Name                      opensearch
