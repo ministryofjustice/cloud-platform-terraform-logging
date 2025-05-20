@@ -118,6 +118,18 @@ config:
         Storage.pause_on_chunks_overlimit True
 
     [INPUT]
+        Name                              kubernetes_events
+        Alias                             eventrouter
+        Tag                               eventrouter.*
+        DB                                eventrouter.db
+        # ask k8s API for updates every x seconds
+        interval_sec                      60
+        # fetch at most x items per requests (pagination)
+        kube_request_limit                250
+        Storage.type                      filesystem
+        Storage.pause_on_chunks_overlimit True
+
+    [INPUT]
         Name                              tail
         Alias                             kube_apiserver_audit
         Tag                               kube-apiserver-audit.*
@@ -209,6 +221,7 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
+        Workers                   2
 
     [OUTPUT]
         Name                      opensearch
@@ -229,6 +242,28 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
+        Workers                   2
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     eventrouter_os
+        Match                     eventrouter.*
+        Host                      ${opensearch_app_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Current_Time_Index        On
+        Logstash_Prefix           ${cluster}_eventrouter
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
+        Workers                   1
 
     [OUTPUT]
         Name                      opensearch
