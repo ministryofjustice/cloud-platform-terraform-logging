@@ -120,8 +120,8 @@ resource "kubernetes_limit_range" "default" {
     limit {
       type = "Container"
       default = {
-        cpu    = "2"
-        memory = "3500Mi"
+        cpu    = "4"
+        memory = "5500Mi"
       }
       default_request = {
         cpu    = "100m"
