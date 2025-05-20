@@ -68,7 +68,7 @@ config:
   service: |
     [SERVICE]
         Flush                             1
-        Log_Level                         info
+        Log_Level                         debug
         Daemon                            Off
         Grace                             30
         Parsers_File                      parsers.conf
@@ -106,25 +106,14 @@ config:
         Alias                             default_nginx_ingress
         Tag                               nginx-ingress.*
         Path                              /var/log/containers/*nx-*.log
-        Parser                            cri-containerd
+        Parser                            generic-json, cri-containerd
         Refresh_Interval                  5
+        Skip_Long_Lines                   On
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
         Offset_Key                        pause_position_nginx_ingress
         DB                                nginx-ingress.db
         DB.locking                        true
-        Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
-
-    [INPUT]
-        Name                              kubernetes_events
-        Alias                             eventrouter
-        Tag                               eventrouter.*
-        DB                                eventrouter.db
-        # ask k8s API for updates every x seconds
-        interval_sec                      60
-        # fetch at most x items per requests (pagination)
-        kube_request_limit                10
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
 
@@ -243,26 +232,6 @@ config:
 
     [OUTPUT]
         Name                      opensearch
-        Alias                     eventrouter_os
-        Match                     eventrouter.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Current_Time_Index        On
-        Logstash_Prefix           ${cluster}_eventrouter
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
-
-    [OUTPUT]
-        Name                      opensearch
         Alias                     ipamd_os
         Match                     ipamd.*
         Host                      ${opensearch_app_host}
@@ -287,7 +256,7 @@ config:
         Name         generic-json
         Format       json
         Time_Key     time
-        Time_Format  %Y-%m-%dT%H:%M:%S.%L
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
         Time_Keep    On
     # CRI-containerd Parser
     [PARSER]
