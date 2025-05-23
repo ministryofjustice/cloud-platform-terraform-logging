@@ -216,7 +216,6 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
-        Workers                   2
 
     [OUTPUT]
         Name                      opensearch
@@ -237,7 +236,6 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
-        Workers                   2
 
     [OUTPUT]
         Name                      opensearch
@@ -258,7 +256,6 @@ config:
         AWS_REGION                eu-west-2
         Suppress_Type_Name        On
         Buffer_Size               False
-        Workers                   1
 
     [OUTPUT]
         Name                      opensearch
