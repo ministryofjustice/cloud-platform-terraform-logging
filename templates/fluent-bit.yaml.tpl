@@ -105,7 +105,7 @@ config:
         Name                              tail
         Alias                             default_nginx_ingress
         Tag                               nginx-ingress.*
-        Path                              /var/log/containers/*nx-*.log
+        Path                              /var/log/containers/nginx-ingress-default*controller*_ingress-controllers_*.log
         Exclude_Path                      /var/log/containers/*nginx-ingress-modsec*controller*_ingress-controllers_*.log
         Parser                            cri-containerd
         Refresh_Interval                  5
@@ -181,11 +181,6 @@ config:
         script  /fluent-bit/scripts/cb_extract_team_values.lua
         call cb_extract_team_values
 
-    ## Redaction of fields
-    [FILTER]
-        Name                grep
-        Match               nginx-ingress.*
-        Exclude             log /.*ModSecurity-nginx.*/
     [FILTER]
         Name                kubernetes
         Alias               default_nginx_ingress
