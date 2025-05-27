@@ -1,3 +1,6 @@
+locals {
+  alert_envs = ["live", "manager"]
+}
 ###################
 # K8S - Namespace #
 ###################
@@ -135,6 +138,7 @@ resource "kubernetes_limit_range" "default" {
 # prometheus rule alert #
 #########################
 resource "kubectl_manifest" "prometheus_rule_alert" {
+  count      = contains(local.alert_envs, terraform.workspace) ? 1 : 0
   depends_on = [helm_release.fluent_bit]
   yaml_body  = file("${path.module}/resources/prometheusrule-alerts/alerts.yaml")
 }
