@@ -107,7 +107,7 @@ config:
         Tag                               nginx-ingress.*
         Path                              /var/log/containers/nginx-ingress-default*controller*_ingress-controllers_*.log
         Exclude_Path                      /var/log/containers/*nginx-ingress-modsec*controller*_ingress-controllers_*.log
-        Parser                            cri-containerd
+        Parser                            generic-json, cri-containerd
         Refresh_Interval                  5
         Skip_Long_Lines                   On
         Buffer_Max_Size                   5MB
