@@ -78,7 +78,7 @@ config:
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
         Storage.max_chunks_up             256 # maximum number of Chunks that can be up in memory. This helps to control memory usage.
-        Storage.backlog.mem_limit         2MB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
+        Storage.backlog.mem_limit         500MB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
 
   inputs: |
     [INPUT]
@@ -92,14 +92,14 @@ config:
         Refresh_Interval                  5
         Skip_Long_Lines                   On
         Buffer_Max_Size                   5MB # limit of the buffer size per monitored file. When a buffer needs to be increased (e.g: very long lines), this value is used to restrict how much the memory buffer can grow. If reading a file exceeds this limit, the file is removed from the monitored file list.
-        Buffer_Chunk_Size                 1M
+        Buffer_Chunk_Size                 2M
         Offset_Key                        pause_position_kubernetes
         DB                                kubernetes.db
         DB.locking                        true
         ## https://docs.fluentbit.io/manual/administration/buffering-and-storage#filesystem-buffering-to-the-rescue
         Storage.type                      filesystem
         ## https://docs.fluentbit.io/manual/administration/backpressure#storage.max_chunks_up
-        Storage.pause_on_chunks_overlimit True
+        Storage.pause_on_chunks_overlimit Off
 
     [INPUT]
         Name                              tail
