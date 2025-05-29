@@ -68,7 +68,7 @@ config:
   service: |
     [SERVICE]
         Flush                             1
-        Log_Level                         debug
+        Log_Level                         info
         Daemon                            Off
         Grace                             30
         Parsers_File                      parsers.conf
@@ -77,8 +77,8 @@ config:
         HTTP_Listen                       0.0.0.0
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
-        Storage.max_chunks_up             64 # maximum number of Chunks that can be up in memory. This helps to control memory usage.
-        Storage.backlog.mem_limit         100MB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
+        Storage.max_chunks_up             256 # maximum number of Chunks that can be up in memory. This helps to control memory usage.
+        Storage.backlog.mem_limit         500MB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
 
   inputs: |
     [INPUT]
@@ -92,14 +92,14 @@ config:
         Refresh_Interval                  5
         Skip_Long_Lines                   On
         Buffer_Max_Size                   5MB # limit of the buffer size per monitored file. When a buffer needs to be increased (e.g: very long lines), this value is used to restrict how much the memory buffer can grow. If reading a file exceeds this limit, the file is removed from the monitored file list.
-        Buffer_Chunk_Size                 1M
+        Buffer_Chunk_Size                 2M
         Offset_Key                        pause_position_kubernetes
         DB                                kubernetes.db
         DB.locking                        true
         ## https://docs.fluentbit.io/manual/administration/buffering-and-storage#filesystem-buffering-to-the-rescue
         Storage.type                      filesystem
         ## https://docs.fluentbit.io/manual/administration/backpressure#storage.max_chunks_up
-        Storage.pause_on_chunks_overlimit True
+        Storage.pause_on_chunks_overlimit Off
 
     [INPUT]
         Name                              tail
@@ -107,16 +107,16 @@ config:
         Tag                               nginx-ingress.*
         Path                              /var/log/containers/nginx-ingress-default*controller*_ingress-controllers_*.log
         Exclude_Path                      /var/log/containers/*nginx-ingress-modsec*controller*_ingress-controllers_*.log
-        Parser                            generic-json, cri-containerd
+        Parser                            cri-containerd
         Refresh_Interval                  5
         Skip_Long_Lines                   On
-        Buffer_Max_Size                   5MB
-        Buffer_Chunk_Size                 1M
+        Buffer_Max_Size                   4MB
+        Buffer_Chunk_Size                 2MB
         Offset_Key                        pause_position_nginx_ingress
         DB                                nginx-ingress.db
         DB.locking                        true
         Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
+        Storage.pause_on_chunks_overlimit Off
 
     [INPUT]
         Name                              kubernetes_events
@@ -162,120 +162,120 @@ config:
 
   filters: |
     [FILTER]
-        Name                kubernetes
-        Alias               user_app_data
-        Match               kubernetes.*
-        Kube_Tag_Prefix     kubernetes.var.log.containers.
-        Kube_URL            https://kubernetes.default.svc:443
-        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
-        K8S-Logging.Parser  On
-        K8S-Logging.Exclude On
-        Merge_Log           Off
-        Buffer_Size         1MB
+        Name                              kubernetes
+        Alias                             user_app_data
+        Match                             kubernetes.*
+        Kube_Tag_Prefix                   kubernetes.var.log.containers.
+        Kube_URL                          https://kubernetes.default.svc:443
+        Kube_CA_File                      /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File                   /var/run/secrets/kubernetes.io/serviceaccount/token
+        K8S-Logging.Parser                On
+        K8S-Logging.Exclude               On
+        Merge_Log                         Off
+        Buffer_Size                       1MB
 
     [FILTER]
-        Name lua
-        Alias user_app_data_os
-        Match kubernetes.*
-        script  /fluent-bit/scripts/cb_extract_team_values.lua
-        call cb_extract_team_values
+        Name                              lua
+        Alias                             user_app_data_os
+        Match                             kubernetes.*
+        script                            /fluent-bit/scripts/cb_extract_team_values.lua
+        call                              cb_extract_team_values
 
     [FILTER]
-        Name                kubernetes
-        Alias               default_nginx_ingress
-        Match               nginx-ingress.*
-        Kube_Tag_Prefix     nginx-ingress.var.log.containers.
-        Kube_URL            https://kubernetes.default.svc:443
-        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
-        K8S-Logging.Parser  On
-        K8S-Logging.Exclude On
-        Keep_Log            Off
-        Merge_Log           On
-        Merge_Log_Key       log_processed
-        Buffer_Size         1MB
+        Name                              kubernetes
+        Alias                             default_nginx_ingress
+        Match                             nginx-ingress.*
+        Kube_Tag_Prefix                   nginx-ingress.var.log.containers.
+        Kube_URL                          https://kubernetes.default.svc:443
+        Kube_CA_File                      /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File                   /var/run/secrets/kubernetes.io/serviceaccount/token
+        K8S-Logging.Parser                On
+        K8S-Logging.Exclude               On
+        Keep_Log                          Off
+        Merge_Log                         On
+        Merge_Log_Key                     log_processed
+        Buffer_Size                       1MB
 
   outputs: |
     [OUTPUT]
-        Name                      opensearch
-        Alias                     user_app_data_os
-        Match                     kubernetes.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Current_Time_Index        On
-        Logstash_Prefix           ${cluster}_kubernetes_cluster
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Name                              opensearch
+        Alias                             user_app_data_os
+        Match                             kubernetes.*
+        Host                              ${opensearch_app_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Current_Time_Index                On
+        Logstash_Prefix                   ${cluster}_kubernetes_cluster
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     default_nginx_ingress_os
-        Match                     nginx-ingress.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Current_Time_Index        On
-        Logstash_Prefix           ${cluster}_kubernetes_ingress
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Name                              opensearch
+        Alias                             default_nginx_ingress_os
+        Match                             nginx-ingress.*
+        Host                              ${opensearch_app_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Current_Time_Index                On
+        Logstash_Prefix                   ${cluster}_kubernetes_ingress
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     eventrouter_os
-        Match                     eventrouter.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Current_Time_Index        On
-        Logstash_Prefix           ${cluster}_eventrouter
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Name                              opensearch
+        Alias                             eventrouter_os
+        Match                             eventrouter.*
+        Host                              ${opensearch_app_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Current_Time_Index                On
+        Logstash_Prefix                   ${cluster}_eventrouter
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     ipamd_os
-        Match                     ipamd.*
-        Host                      ${opensearch_app_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Current_Time_Index        On
-        Logstash_Prefix           ${cluster}_ipamd
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False        
+        Name                              opensearch
+        Alias                             ipamd_os
+        Match                             ipamd.*
+        Host                              ${opensearch_app_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Current_Time_Index                On
+        Logstash_Prefix                   ${cluster}_ipamd
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
