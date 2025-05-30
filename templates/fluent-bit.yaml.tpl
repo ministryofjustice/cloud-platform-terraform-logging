@@ -78,7 +78,7 @@ config:
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
         Storage.max_chunks_up             256 # maximum number of Chunks that can be up in memory. This helps to control memory usage.
-        Storage.backlog.mem_limit         500MB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
+        Storage.backlog.mem_limit         2GB # maximum value of memory to use when processing data chunks that were not delivered and are still in the storage layer
 
   inputs: |
     [INPUT]
@@ -86,13 +86,13 @@ config:
         Alias                             user_app_data
         Tag                               kubernetes.*
         Path                              /var/log/containers/*.log
-        Exclude_Path                      *nginx-ingress*.log,eventrouter-*.log
+        Exclude_Path                      *nginx-ingress*.log,eventrouter-*.log,*fluent-bit*.log
         Parser                            cri-containerd
         Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Skip_Long_Lines                   On
-        Buffer_Max_Size                   5MB # limit of the buffer size per monitored file. When a buffer needs to be increased (e.g: very long lines), this value is used to restrict how much the memory buffer can grow. If reading a file exceeds this limit, the file is removed from the monitored file list.
-        Buffer_Chunk_Size                 2M
+        Buffer_Max_Size                   16KB # limit of the buffer size per monitored file. When a buffer needs to be increased (e.g: very long lines), this value is used to restrict how much the memory buffer can grow. If reading a file exceeds this limit, the file is removed from the monitored file list.
+        Buffer_Chunk_Size                 16KB
         Offset_Key                        pause_position_kubernetes
         DB                                kubernetes.db
         DB.locking                        true
