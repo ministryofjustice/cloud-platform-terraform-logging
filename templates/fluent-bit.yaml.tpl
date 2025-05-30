@@ -91,8 +91,8 @@ config:
         Multiline.parser                  docker, cri
         Refresh_Interval                  5
         Skip_Long_Lines                   On
-        Buffer_Max_Size                   16KB # limit of the buffer size per monitored file. When a buffer needs to be increased (e.g: very long lines), this value is used to restrict how much the memory buffer can grow. If reading a file exceeds this limit, the file is removed from the monitored file list.
-        Buffer_Chunk_Size                 16KB
+        Buffer_Max_Size                   2MB # limit of the buffer size per monitored file. When a buffer needs to be increased (e.g: very long lines), this value is used to restrict how much the memory buffer can grow. If reading a file exceeds this limit, the file is removed from the monitored file list.
+        Buffer_Chunk_Size                 2MB
         Offset_Key                        pause_position_kubernetes
         DB                                kubernetes.db
         DB.locking                        true
@@ -100,6 +100,7 @@ config:
         Storage.type                      filesystem
         ## https://docs.fluentbit.io/manual/administration/backpressure#storage.max_chunks_up
         Storage.pause_on_chunks_overlimit Off
+        Threaded                          True
 
     [INPUT]
         Name                              tail
