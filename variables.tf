@@ -11,3 +11,8 @@ variable "enable_fluent_bit" {
   default     = true
   type        = bool
 }
+
+variable "cortex_xsiam_endpoint_preprod" {
+  description = "The Cortex XSIAM endpoint for pre-production environment"
+  type        = string
+}
