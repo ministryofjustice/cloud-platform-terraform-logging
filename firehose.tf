@@ -27,7 +27,7 @@ module "iam_assumable_role" {
   assume_role_condition_test = "StringEquals"
   create_role                = true
   force_detach_policies      = true
-  role_name                  = "cloud-platform-firehose-irsa-${random_id.name.hex}-${data.aws_eks_cluster.eks_cluster.name}"
+  role_name                  = "cloud-platform-firehose-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
   role_policy_arns           = module.test_firehose_eks_app_logs_to_xsiam.output.iam_role_arns[eks-to-firehose]
   oidc_providers = {
     (data.aws_eks_cluster.eks_cluster.name) : {
