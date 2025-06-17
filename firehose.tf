@@ -29,7 +29,7 @@ module "iam_assumable_role" {
   force_detach_policies      = true
   role_name                  = "cloud-platform-firehose-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
   role_policy_arns           = {
-    firehose = module.test_firehose_eks_app_logs_to_xsiam.output.eks_to_firehose_iam_policy_arn
+    firehose = module.test_firehose_eks_app_logs_to_xsiam.eks_to_firehose_iam_policy_arn
   }
   oidc_providers = {
     (data.aws_eks_cluster.eks_cluster.name) : {
@@ -38,5 +38,4 @@ module "iam_assumable_role" {
     }
   }
 
-  tags = default_tags
 }
