@@ -86,7 +86,7 @@ config:
         Alias                             user_app_data
         Tag                               kubernetes.*
         Path                              /var/log/containers/*.log
-        Exclude_Path                      *nginx-ingress*.log,eventrouter-*.log,*fluent-bit*.log
+        Exclude_Path                      *nginx-ingress*.log,eventrouter-*.log
         Parser                            cri-containerd
         Multiline.parser                  docker, cri
         Refresh_Interval                  5
