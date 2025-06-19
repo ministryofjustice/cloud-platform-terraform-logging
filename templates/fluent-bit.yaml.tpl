@@ -278,6 +278,16 @@ config:
         Suppress_Type_Name                On
         Buffer_Size                       False
 
+    [OUTPUT]
+        Name                              kinesis_firehose
+        Alias                             user_app_data_firehose
+        Match                             kubernetes.*
+        region                            eu-west-2
+        delivery_stream                   cloudwatch-export-fc12e1daaed89b71
+        auto_retry_requests               On
+        workers                           2
+        Retry_Limit                       False    
+
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
     [PARSER]
