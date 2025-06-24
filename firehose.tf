@@ -35,6 +35,7 @@ module "iam_assumable_role" {
   role_name                  = "cloud-platform-firehose-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
   role_policy_arns           = {
     firehose = module.test_firehose_eks_app_logs_to_xsiam.eks_to_firehose_iam_policy_arn
+    firehose2 = module.test_firehose_eks_app_logs_to_s3.eks_to_firehose_iam_policy_arn
   }
   oidc_providers = {
     (data.aws_eks_cluster.eks_cluster.name) : {
