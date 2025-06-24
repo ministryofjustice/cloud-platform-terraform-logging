@@ -3,6 +3,11 @@ module "test_firehose_eks_app_logs_to_xsiam" {
   destination_http_endpoint = var.cortex_xsiam_endpoint_preprod
 }
 
+module "test_firehose_eks_app_logs_to_s3" {
+  source                    = "github.com/ministryofjustice/cloud-platform-terraform-firehose-data-stream?ref=fluentbit"
+  destination_bucket_arn    = "arn:aws:s3:::ky-test-firehose"
+}
+
 ###########################
 # Get account information #
 ###########################
