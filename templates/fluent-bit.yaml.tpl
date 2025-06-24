@@ -286,7 +286,20 @@ config:
         delivery_stream                   cloudwatch-export-fc12e1daaed89b71
         auto_retry_requests               On
         workers                           2
-        Retry_Limit                       False    
+        Retry_Limit                       False
+        time_key                          @timestamp
+        time_key_format                   %Y-%m-%dT%H:%M:%S%z
+
+    [OUTPUT]
+        Name                              kinesis_firehose
+        Alias                             user_app_data_firehose_s3
+        Match                             kubernetes.*
+        region                            eu-west-2
+        delivery_stream                   cloudwatch-export-e6d2d10e6b706f8d
+        auto_retry_requests               On
+        workers                           2
+        time_key                          @timestamp
+        time_key_format                   %Y-%m-%dT%H:%M:%S%z
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
