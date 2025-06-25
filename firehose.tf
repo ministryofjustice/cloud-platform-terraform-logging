@@ -1,11 +1,7 @@
 module "test_firehose_eks_app_logs_to_xsiam" {
-  source                    = "github.com/ministryofjustice/cloud-platform-terraform-firehose-data-stream?ref=fluentbit"
-  destination_http_endpoint = var.cortex_xsiam_endpoint_preprod
-}
-
-module "test_firehose_eks_app_logs_to_s3" {
-  source                    = "github.com/ministryofjustice/cloud-platform-terraform-firehose-data-stream?ref=fluentbit"
-  destination_bucket_arn    = "arn:aws:s3:::ky-test-firehose"
+  source                      = "github.com/ministryofjustice/cloud-platform-terraform-firehose-data-stream?ref=fluentbit"
+  cloudwatch_log_group_names  = [aws_cloudwatch_log_group.application_logs.name]
+  destination_http_endpoint   = var.cortex_xsiam_endpoint_preprod
 }
 
 ###########################
@@ -34,8 +30,7 @@ module "iam_assumable_role" {
   force_detach_policies      = true
   role_name                  = "cloud-platform-firehose-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
   role_policy_arns           = {
-    firehose = module.test_firehose_eks_app_logs_to_xsiam.eks_to_firehose_iam_policy_arn
-    firehose2 = module.test_firehose_eks_app_logs_to_s3.eks_to_firehose_iam_policy_arn
+    cloudwatch = aws_iam_policy.eks-to-cloudwatch.arn
   }
   oidc_providers = {
     (data.aws_eks_cluster.eks_cluster.name) : {
@@ -44,4 +39,32 @@ module "iam_assumable_role" {
     }
   }
 
+}
+
+resource "aws_cloudwatch_log_group" "application_logs" {
+  name              = "/cloud-platform/eks/${data.aws_eks_cluster.eks_cluster.name}/application-logs"
+  retention_in_days = 14
+}
+
+data "aws_iam_policy_document" "irsa-role-policy" {
+  version = "2012-10-17"
+
+  statement {
+    sid    = "EKStoCloudWatch"
+    effect = "Allow"
+    actions = [
+			"logs:CreateLogStream",
+			"logs:CreateLogGroup",
+			"logs:PutLogEvents"
+    ]
+    resources = [
+      aws_cloudwatch_log_group.application_logs.arn,
+      "${aws_cloudwatch_log_group.application_logs.arn}:*"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "eks-to-cloudwatch" {
+  name_prefix = "eks-to-cloudwatch"
+  policy      = data.aws_iam_policy_document.irsa-role-policy.json
 }
