@@ -283,7 +283,7 @@ config:
         Alias                             user_app_data_cloudwatch
         Match                             kubernetes.*
         region                            eu-west-2
-        log_group_name                    /cloud-platform/eks/cp-1606-1633/application-logs
+        log_group_name                    ${cloudwatch_log_group_name}
         log_stream_prefix                 fluentbit-
         Retry_Limit                       False
 
