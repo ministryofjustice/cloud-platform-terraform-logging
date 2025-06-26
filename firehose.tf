@@ -18,12 +18,12 @@ module "test_firehose_eks_app_logs_to_xsiam" {
 ###############################
 resource "aws_cloudwatch_log_group" "application_logs" {
   name              = "/cloud-platform/eks/${data.aws_eks_cluster.eks_cluster.name}/application-logs"
-  retention_in_days = 14
+  retention_in_days = 1
 }
 
-###########################
+###################################################
 # Create IRSA for fluent-bit to access CloudWatch #
-###########################
+###################################################
 
 # Get account information #
 data "aws_caller_identity" "current" {}
