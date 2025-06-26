@@ -280,7 +280,7 @@ config:
 
     [OUTPUT]
         Name                              cloudwatch_logs
-        Alias                             user_app_data_cloudwatch
+        Alias                             user_app_data_cloudwatch_cortex
         Match                             kubernetes.*
         region                            eu-west-2
         log_group_name                    ${cloudwatch_log_group_name}
