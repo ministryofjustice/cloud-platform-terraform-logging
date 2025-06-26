@@ -8,6 +8,7 @@
 # Create Firehose #
 ###################
 module "test_firehose_eks_app_logs_to_xsiam" {
+  name_affix                  = "application-logs"    
   source                      = "github.com/ministryofjustice/cloud-platform-terraform-firehose-data-stream?ref=fluentbit"
   cloudwatch_log_group_names  = [aws_cloudwatch_log_group.application_logs.name]
   destination_http_endpoint   = var.cortex_xsiam_endpoint_preprod
