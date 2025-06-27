@@ -1,0 +1,32 @@
+# Create assumable role #
+module "iam_assumable_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "5.20.0"
+
+  allow_self_assume_role     = false
+  assume_role_condition_test = "StringEquals"
+  create_role                = true
+  force_detach_policies      = true
+  role_name                  = "cloud-platform-firehose-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
+  role_policy_arns           = {
+    s3 = module.s3_bucket_application_logs.irsa_policy_arn
+  }
+  oidc_providers = {
+    (data.aws_eks_cluster.eks_cluster.name) : {
+      provider_arn               = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"
+      namespace_service_accounts = ["logging:fluent-bit-cp-managed"]
+    }
+  }
+}
+
+module "s3_bucket_application_logs" {
+  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.1.0"
+
+  team_name              = var.team_name
+  business_unit          = var.business_unit
+  application            = var.application
+  is_production          = var.is_production
+  environment_name       = var.environment
+  infrastructure_support = var.infrastructure_support
+  namespace              = var.namespace
+}     
