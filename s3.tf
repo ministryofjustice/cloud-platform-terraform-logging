@@ -1,3 +1,32 @@
+####################
+# Create S3 Bucket #
+####################
+
+module "s3_bucket_application_logs" {
+  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.1.0"
+
+  team_name              = var.team_name
+  business_unit          = var.business_unit
+  application            = var.application
+  is_production          = var.is_production
+  environment_name       = var.environment
+  infrastructure_support = var.infrastructure_support
+  namespace              = var.namespace
+} 
+
+###########################################
+# Create IRSA for fluent-bit to access S3 #
+###########################################
+
+# Get account information #
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+
+# Get EKS cluster #
+data "aws_eks_cluster" "eks_cluster" {
+  name = var.eks_cluster_name
+}
+
 # Create assumable role #
 module "iam_assumable_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
@@ -17,16 +46,4 @@ module "iam_assumable_role" {
       namespace_service_accounts = ["logging:fluent-bit-cp-managed"]
     }
   }
-}
-
-module "s3_bucket_application_logs" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.1.0"
-
-  team_name              = var.team_name
-  business_unit          = var.business_unit
-  application            = var.application
-  is_production          = var.is_production
-  environment_name       = var.environment
-  infrastructure_support = var.infrastructure_support
-  namespace              = var.namespace
-}     
+}    
