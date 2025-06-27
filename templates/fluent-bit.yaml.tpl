@@ -289,7 +289,7 @@ config:
         store_dir                         /tmp/fluent-bit/s3
         store_dir_limit_size              1G
         s3_key_format                     /logs/%Y/%m/%d/%H/%M/%S-$UUID
-        use_put_object                    On
+        use_put_object                    true
         Retry_Limit                       False        
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
