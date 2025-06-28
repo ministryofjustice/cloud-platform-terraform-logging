@@ -48,7 +48,7 @@ module "iam_assumable_role" {
   assume_role_condition_test = "StringEquals"
   create_role                = true
   force_detach_policies      = true
-  role_name                  = "cloud-platform-firehose-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
+  role_name                  = "cloud-platform-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
   role_policy_arns           = {
     s3 = module.s3_bucket_application_logs.irsa_policy_arn
   }
