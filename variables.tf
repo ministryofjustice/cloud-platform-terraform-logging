@@ -17,9 +17,9 @@ variable "eks_cluster_name" {
   type        = string
 }
 
-########
-# Tags #
-########
+#########################################
+# Required tags variables for s3 module #
+#########################################
 variable "business_unit" {
   description = "Area of the MOJ responsible for the service"
   type        = string
@@ -47,7 +47,7 @@ variable "team_name" {
 variable "namespace" {
   description = "Namespace name"
   type        = string
-  default     = ""
+  default     = "logging"
 }
 
 variable "environment_name" {
