@@ -4,8 +4,8 @@
 
 module "s3_bucket_application_logs" {
   source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.2.0"
-
-lifecycle_rule = [
+  
+  lifecycle_rule = [
     {
       enabled = true
       id      = "retire logs after 1 day"
