@@ -36,7 +36,7 @@ data "aws_partition" "current" {}
 
 # Get EKS cluster #
 data "aws_eks_cluster" "eks_cluster" {
-  name = var.eks_cluster_name
+  name = terraform.workspace
 }
 
 # Create assumable role #

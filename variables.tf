@@ -12,13 +12,8 @@ variable "enable_fluent_bit" {
   type        = bool
 }
 
-variable "eks_cluster_name" {
-  description = "The name of the eks cluster to retrieve the OIDC information"
-  type        = string
-}
-
 #########################################
-# Required tags variables for s3 module #
+# Required tag variables for s3 module #
 #########################################
 variable "business_unit" {
   description = "Area of the MOJ responsible for the service"
