@@ -21,8 +21,8 @@ resource "kubernetes_secret" "s3_bucket_application_logs" {
   }
 
   data = {
-    bucket_arn  = module.s3_bucket.bucket_arn
-    bucket_name = module.s3_bucket.bucket_name
+    bucket_arn  = module.s3_bucket_application_logs.bucket_arn
+    bucket_name = module.s3_bucket_application_logs.bucket_name
   }
 }
 
