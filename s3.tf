@@ -1,3 +1,10 @@
+################################################################################################
+# This covers the creation of a S3 bucket to concurrently ship logs from fluent-bit to S3      #
+# The S3 bucket is used as a data source for Cortex XSIAM to ingest logs from Cloud Platform   #
+# More details of how we ship logs to Cortex XSIAM can be found in the Cloud Platform runbook: # 
+# https://runbooks.cloud-platform.service.justice.gov.uk/logs-to-soc-cortex-xsiam.html         #                     
+################################################################################################
+
 ####################
 # Create S3 Bucket #
 ####################
