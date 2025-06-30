@@ -41,9 +41,10 @@ resource "helm_release" "fluent_bit" {
   timeout    = 1500
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
-    opensearch_app_host = var.opensearch_app_host
-    elasticsearch_host  = var.elasticsearch_host
-    cluster             = terraform.workspace
+    opensearch_app_host               = var.opensearch_app_host
+    elasticsearch_host                = var.elasticsearch_host
+    s3_bucket_application_logs        = module.s3_bucket_application_logs.bucket_name
+    cluster                           = terraform.workspace
   })]
 
   depends_on = [kubernetes_service_account.this]
