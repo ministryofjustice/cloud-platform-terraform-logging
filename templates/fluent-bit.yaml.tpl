@@ -109,16 +109,16 @@ config:
         Path                              /var/log/containers/nginx-ingress-default*controller*_ingress-controllers_*.log
         Exclude_Path                      /var/log/containers/*nginx-ingress-modsec*controller*_ingress-controllers_*.log
         Parser                            cri-containerd
-        Refresh_Interval                  5
+        Refresh_Interval                  1
         Skip_Long_Lines                   On
-        Buffer_Max_Size                   4MB
-        Buffer_Chunk_Size                 2MB
+        Buffer_Max_Size                   20MB
+        Buffer_Chunk_Size                 512KB
         Offset_Key                        pause_position_nginx_ingress
         DB                                nginx-ingress.db
         DB.locking                        true
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit Off
-        Threaded                          False
+        Threaded                          True
 
     [INPUT]
         Name                              kubernetes_events
