@@ -111,13 +111,14 @@ config:
         Parser                            cri-containerd
         Refresh_Interval                  5
         Skip_Long_Lines                   On
-        Buffer_Max_Size                   4MB
+        Buffer_Max_Size                   2MB
         Buffer_Chunk_Size                 2MB
         Offset_Key                        pause_position_nginx_ingress
         DB                                nginx-ingress.db
         DB.locking                        true
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit Off
+        Threaded                          True
 
     [INPUT]
         Name                              kubernetes_events
