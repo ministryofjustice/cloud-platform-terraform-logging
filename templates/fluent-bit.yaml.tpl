@@ -279,20 +279,6 @@ config:
         Suppress_Type_Name                On
         Buffer_Size                       False
 
-    [OUTPUT]
-        Name                              s3
-        Alias                             user_app_data_s3
-        Match                             kubernetes.*
-        bucket                            ${s3_bucket_application_logs}
-        region                            eu-west-2
-        total_file_size                   5M
-        upload_timeout                    10m
-        store_dir                         /tmp/fluent-bit/s3
-        store_dir_limit_size              1G
-        s3_key_format                     /logs/%Y/%m/%d/%H/%M/%S-$UUID
-        use_put_object                    true
-        Retry_Limit                       False        
-
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
     [PARSER]
