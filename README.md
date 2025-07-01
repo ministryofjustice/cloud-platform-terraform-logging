@@ -66,6 +66,7 @@ Terraform module that deploys cloud-platform logging solution. It includes compo
 
 | Name | Description |
 |------|-------------|
+| <a name="output_fluent_bit_irsa_arn"></a> [fluent\_bit\_irsa\_arn](#output\_fluent\_bit\_irsa\_arn) | IAM Role ARN for Fluent Bit IRSA |
 | <a name="output_s3_bucket_application_logs_arn"></a> [s3\_bucket\_application\_logs\_arn](#output\_s3\_bucket\_application\_logs\_arn) | S3 bucket ARN for application logs |
 | <a name="output_s3_bucket_application_logs_name"></a> [s3\_bucket\_application\_logs\_name](#output\_s3\_bucket\_application\_logs\_name) | S3 bucket name for application logs |
 <!-- END_TF_DOCS -->
