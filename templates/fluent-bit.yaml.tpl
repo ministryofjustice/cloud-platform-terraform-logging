@@ -112,7 +112,8 @@ config:
         Refresh_Interval                  1
         Skip_Long_Lines                   On
         Buffer_Max_Size                   20MB
-        Buffer_Chunk_Size                 512KB
+        Buffer_Chunk_Size                 256KB
+        Rotate_Wait                       10
         Offset_Key                        pause_position_nginx_ingress
         DB                                nginx-ingress.db
         DB.locking                        true
