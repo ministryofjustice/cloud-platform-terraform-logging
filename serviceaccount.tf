@@ -22,9 +22,15 @@ resource "kubernetes_service_account" "this" {
   metadata {
     name      = local.sa_name
     namespace = local.namespace
+    annotations = {
+      "eks.amazonaws.com/role-arn" = module.iam_assumable_role.iam_role_arn
+    }    
   }
 
-  depends_on = [kubernetes_namespace.logging]
+  depends_on = [
+    kubernetes_namespace.logging,
+    module.iam_assumable_role
+  ]
 }
 
 resource "kubernetes_cluster_role" "this" {
