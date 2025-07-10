@@ -234,7 +234,7 @@ config:
         Logstash_Format                   On
         Replace_Dots                      On
         Generate_ID                       On
-        Retry_Limit                       False
+        Retry_Limit                       10
         AWS_AUTH                          On
         AWS_REGION                        eu-west-2
         Suppress_Type_Name                On
