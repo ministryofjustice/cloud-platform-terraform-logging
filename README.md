@@ -25,8 +25,8 @@ Terraform module that deploys cloud-platform logging solution. It includes compo
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_iam_assumable_role"></a> [iam\_assumable\_role](#module\_iam\_assumable\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | 5.20.0 |
-| <a name="module_s3_bucket_application_logs"></a> [s3\_bucket\_application\_logs](#module\_s3\_bucket\_application\_logs) | github.com/ministryofjustice/cloud-platform-terraform-s3-bucket | 5.59.0 |
+| <a name="module_iam_assumable_role"></a> [iam\_assumable\_role](#module\_iam\_assumable\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | 5.59.0 |
+| <a name="module_s3_bucket_application_logs"></a> [s3\_bucket\_application\_logs](#module\_s3\_bucket\_application\_logs) | github.com/ministryofjustice/cloud-platform-terraform-s3-bucket | 5.2.0 |
 
 ## Resources
 
