@@ -10,7 +10,7 @@
 ####################
 
 module "s3_bucket_application_logs" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.59.0"
+  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.2.0"
   
   lifecycle_rule = [
     {
@@ -62,7 +62,7 @@ data "aws_eks_cluster" "eks_cluster" {
 # Create assumable role #
 module "iam_assumable_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.20.0"
+  version = "5.59.0"
 
   allow_self_assume_role     = false
   assume_role_condition_test = "StringEquals"
