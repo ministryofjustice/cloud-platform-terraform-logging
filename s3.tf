@@ -10,7 +10,7 @@
 ####################
 
 module "s3_bucket_application_logs" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.2.0"
+  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.59.0"
   
   lifecycle_rule = [
     {
