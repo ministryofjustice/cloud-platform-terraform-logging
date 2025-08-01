@@ -19,6 +19,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Prometheus Operator Linter
-        uses: prymitive/pint-action@14de31de6422c070a249571409f47f6685cf3694 # v1.21.0
+        uses: prymitive/pint-action@e73fa9247a12e7e6ef87f4653f834b25b6741a78 # v1.91.0
         with:
           token: ${{ github.token }}
