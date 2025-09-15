@@ -122,6 +122,25 @@ config:
         Threaded                          True
 
     [INPUT]
+        Name                              tail
+        Alias                             internal_nginx_ingress
+        Tag                               nginx-ingress.*
+        Path                              /var/log/containers/nginx-ingress-internal*controller*_ingress-controllers_*.log
+        Exclude_Path                      /var/log/containers/*nginx-ingress-modsec*controller*_ingress-controllers_*.log
+        Parser                            cri-containerd
+        Refresh_Interval                  1
+        Skip_Long_Lines                   On
+        Buffer_Max_Size                   20MB
+        Buffer_Chunk_Size                 256KB
+        Rotate_Wait                       10
+        Offset_Key                        pause_position_nginx_ingress
+        DB                                nginx-ingress.db
+        DB.locking                        true
+        Storage.type                      filesystem
+        Storage.pause_on_chunks_overlimit Off
+        Threaded                          True
+
+    [INPUT]
         Name                              kubernetes_events
         Alias                             eventrouter
         Tag                               eventrouter.*
