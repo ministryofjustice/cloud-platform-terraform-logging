@@ -62,7 +62,7 @@ data "aws_eks_cluster" "eks_cluster" {
 # Create assumable role #
 module "iam_assumable_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.59.0"
+  version = "6.2.3"
 
   allow_self_assume_role     = false
   assume_role_condition_test = "StringEquals"
