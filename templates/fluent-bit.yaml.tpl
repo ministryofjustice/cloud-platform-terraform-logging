@@ -1,5 +1,8 @@
 image:
   repository: fluent/fluent-bit
+  ## Temporarily overriding default tag as latest helm chart release is yet to have the latest fluent-bit as the default
+  ## Remove tag in next helm bump to revert tag management back to helm default
+  tag: 4.2.0
   pullPolicy: Always
 serviceMonitor:
   enabled: true
