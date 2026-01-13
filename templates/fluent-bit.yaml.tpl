@@ -65,6 +65,30 @@ luaScripts:
         return 0, timestamp, record
       end
     end
+  
+  # Filter to remove external-dns warnings about disallowed rune U+002A. It can be removed after we have upgraded to external-dns v0.19.0 or later.
+  # https://github.com/kubernetes-sigs/external-dns/issues/5581
+  cb_filter_external_dns_warnings.lua: |
+    function cb_filter_external_dns_warnings(tag, timestamp, record)
+        if record["kubernetes"] == nil then
+            return 1, timestamp, record
+        end
+
+        if record["kubernetes"]["container_name"] ~= "external-dns" then
+            return 1, timestamp, record
+        end
+
+        local log = record["log"]
+        if log == nil then
+            return 1, timestamp, record
+        end
+
+        if string.find(log, "disallowed rune U+002A", 1, true) then
+            return -1, timestamp, record
+        end
+
+        return 1, timestamp, record
+    end
 
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
 config:
@@ -205,6 +229,13 @@ config:
         Match                             kubernetes.*
         script                            /fluent-bit/scripts/cb_extract_team_values.lua
         call                              cb_extract_team_values
+
+    [FILTER]
+        Name                              lua
+        Alias                             external_dns_warnings_filter
+        Match                             kubernetes.*
+        script                            /fluent-bit/scripts/cb_filter_external_dns_warnings.lua
+        call                              cb_filter_external_dns_warnings
 
     [FILTER]
         Name                              kubernetes
