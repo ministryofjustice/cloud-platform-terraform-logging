@@ -83,7 +83,7 @@ luaScripts:
             return 1, timestamp, record
         end
 
-        if string.find(log, "disallowed rune U+002A", 1, true) then
+        if string.find(log, "disallowed rune", 1, true) then
             return -1, timestamp, record
         end
 
