@@ -1,3 +1,6 @@
+locals {
+  alert_envs = ["live", "manager"]
+}
 ###################
 # K8S - Namespace #
 ###################
@@ -16,28 +19,10 @@ resource "kubernetes_namespace" "logging" {
       "cloud-platform.justice.gov.uk/business-unit"              = "Platforms"
       "cloud-platform.justice.gov.uk/owner"                      = "Cloud Platform: platforms@digital.justice.gov.uk"
       "cloud-platform.justice.gov.uk/source-code"                = "https://github.com/ministryofjustice/cloud-platform-infrastructure"
-      "iam.amazonaws.com/permitted"                              = ".*"
       "cloud-platform.justice.gov.uk/can-tolerate-master-taints" = "true"
       "cloud-platform.justice.gov.uk/slack-channel"              = "cloud-platform"
       "cloud-platform-out-of-hours-alert"                        = "true"
     }
-  }
-}
-
-###############
-# EventRouter #
-###############
-
-resource "helm_release" "eventrouter" {
-  name       = "eventrouter"
-  repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
-  chart      = "eventrouter"
-  namespace  = kubernetes_namespace.logging.id
-  version    = "0.3.3"
-
-  set {
-    name  = "sink"
-    value = "stdout"
   }
 }
 
@@ -52,18 +37,17 @@ resource "helm_release" "fluent_bit" {
   chart      = "fluent-bit"
   repository = "https://fluent.github.io/helm-charts"
   namespace  = kubernetes_namespace.logging.id
-  version    = "0.42.0"
+  version    = "0.54.0"
   timeout    = 1500
 
   values = [templatefile("${path.module}/templates/fluent-bit.yaml.tpl", {
-    opensearch_app_host             = var.opensearch_app_host
-    elasticsearch_host              = var.elasticsearch_host
-    cluster                         = terraform.workspace
+    opensearch_app_host               = var.opensearch_app_host
+    elasticsearch_host                = var.elasticsearch_host
+    s3_bucket_application_logs        = module.s3_bucket_application_logs.bucket_name
+    cluster                           = terraform.workspace
   })]
 
-  depends_on = [
-    var.dependence_prometheus
-  ]
+  depends_on = [kubernetes_service_account.this]
 }
 
 
@@ -122,7 +106,7 @@ resource "kubernetes_resource_quota" "namespace_quota" {
   }
   spec {
     hard = {
-      pods = 100
+      pods = 130
     }
   }
 }
@@ -140,8 +124,8 @@ resource "kubernetes_limit_range" "default" {
     limit {
       type = "Container"
       default = {
-        cpu    = "2"
-        memory = "3500Mi"
+        cpu    = "4"
+        memory = "5500Mi"
       }
       default_request = {
         cpu    = "100m"
@@ -155,6 +139,7 @@ resource "kubernetes_limit_range" "default" {
 # prometheus rule alert #
 #########################
 resource "kubectl_manifest" "prometheus_rule_alert" {
+  count      = contains(local.alert_envs, terraform.workspace) ? 1 : 0
   depends_on = [helm_release.fluent_bit]
   yaml_body  = file("${path.module}/resources/prometheusrule-alerts/alerts.yaml")
 }
